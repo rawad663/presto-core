@@ -12,26 +12,10 @@ from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
 
 
 # Create your views here.
-class RestoList(APIView):
-    """
-    List all restos, or create a new snippet.
-    """
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+class RestoList(generics.ListCreateAPIView):
+    queryset = Resto.objects.all()
+    serializer_class = RestoSerializer
 
-    def get(self, request, format=None):
-        restos = Resto.objects.all()
-        serializer = RestoSerializer(restos, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = RestoSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
 # This is the detail page
 class RestoDetail(APIView):
@@ -63,6 +47,13 @@ class RestoDetail(APIView):
         resto = self.get_object(pk)
         resto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+""" 
+This is the user detail page.
+Users browse other users but user can only edit their own page.
+There are permissions and cRUD actions available.
+"""
 
 
 class UserDetail(APIView):
