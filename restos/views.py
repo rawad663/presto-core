@@ -12,9 +12,11 @@ from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
 
 
 # Create your views here.
-class RestoList(generics.ListCreateAPIView):
-    queryset = Resto.objects.all()
-    serializer_class = RestoSerializer
+class RestoList(APIView):
+    def get(self, request):
+        queryset = Resto.objects.all()
+        serializer_class = RestoSerializer(queryset, many = True)
+        return Response(serializer_class.data)
 
 
 # This is the detail page
