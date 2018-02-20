@@ -11,6 +11,6 @@ virtualenv {env name} # I called it ".end", the dot makes it hidden so you don't
 
 source {env name}/bin/activate
 
-pip install Django=1.11
+pip install Django==1.11
 
-pip install djangorestframework
+pip install djangorestframework==3.7.7
