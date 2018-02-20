@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns) --> Put that in main urls file instead
+
