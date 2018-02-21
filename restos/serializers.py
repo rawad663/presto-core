@@ -12,7 +12,7 @@ class RestoSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    restos = serializers.PrimaryKeyRelatedField(many=True, queryset=Resto.objects.all())
+    restos = serializers.PrimaryKeyRelatedField(many=True, queryset=Resto.objects.all()) # why this? Restos is not an attribute of User
 
     class Meta:
         model = User

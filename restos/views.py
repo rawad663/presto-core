@@ -12,7 +12,7 @@ from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
 from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 class RestoList(APIView):
@@ -27,8 +27,8 @@ class RestoDetail(APIView):
     """
     Retrieve, update or delete a resto instance.
     """
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,) # SHOULD THIS NOT JUST BE IS OWNERORREADONLY? If you put authenticated too,
+    # then anyone who's authenticated might create or update a rest
     def get_object(self, pk):
         try:
             return Resto.objects.get(pk=pk)
@@ -88,7 +88,10 @@ class UserDetail(APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class Register(generics.CreateAPIView):
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request, *args, **kwargs):
         # Creating new User
         username = request.POST.get('username')
@@ -106,3 +109,14 @@ class Register(generics.CreateAPIView):
         token = Token.objects.create(user=user)
 
         return Response({'detail': 'User has been created successfully', 'Token': token.key})
+
+
+class ChangePassword(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(User, username=request.user)
+        user.set_password(request.POST.get('new_password'))
+        user.save()
+
+        return Response({'detail': 'Password has been updated'})

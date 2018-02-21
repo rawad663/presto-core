@@ -23,5 +23,5 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    url(r'^api-token-auth/', views.obtain_auth_token)
+    url(r'^login/', views.obtain_auth_token)
 ]
