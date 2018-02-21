@@ -11,6 +11,6 @@ virtualenv {env name} # I called it ".end", the dot makes it hidden so you don't
 
 source {env name}/bin/activate
 
-pip install -r requirements.txt # this should install the proper versions for you
+pip install Django==1.11
 
-deactivate # whenever you want to exit the virtual env.
+pip install djangorestframework==3.7.7
