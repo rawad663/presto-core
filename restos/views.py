@@ -9,6 +9,9 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from restos.serializers import UserSerializer
 from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
+from rest_framework import generics
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 
 # Create your views here.
@@ -84,3 +87,22 @@ class UserDetail(APIView):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class Register(generics.CreateAPIView):
+    def post(self, request, *args, **kwargs):
+        # Creating new User
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+
+        user = User.objects.create_user(username, email, password)
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+
+        # Generating token for user
+        token = Token.objects.create(user=user)
+
+        return Response({'detail': 'User has been created successfully', 'Token': token.key})
