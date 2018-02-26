@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 # Allow all host headers
-ALLOWED_HOSTS = ['*', '0.0.0.0', 'presto-core.herokuapp.com']
 
 import os
 
@@ -28,8 +27,7 @@ SECRET_KEY = 'z85y#$w_9o=kl++$&95=)+4%b%3z+*9%=&#ev$j49o-a_^i-1='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*', '0.0.0.0', 'presto-core.herokuapp.com']
 
 # Application definition
 
