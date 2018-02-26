@@ -1,1 +1,1 @@
-worker: python manage.py runserver
+web: gunicorn presto-core.wsgi --log-file
