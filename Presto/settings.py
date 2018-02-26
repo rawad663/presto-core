@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 # Allow all host headers
-ALLOWED_HOSTS = ['presto-core.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 import os
 
