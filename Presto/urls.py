@@ -15,15 +15,24 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+<<<<<<< HEAD
 from rest_framework.urlpatterns import format_suffix_patterns
+=======
+from rest_framework.authtoken import views
+>>>>>>> 2d88a7a2ac71fd6a8a367ae7b10deb2950ada76b
 
 urlpatterns = [
-    url(r'^', include('restos.urls')),
+    url(r'', include('restos.urls')),
     url(r'^admin/', admin.site.urls),
 ]
 
 urlpatterns += [
+<<<<<<< HEAD
     url(r'^api-auth/', include('rest_framework.urls')),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
+=======
+    url(r'^login/', views.obtain_auth_token)
+]
+>>>>>>> 2d88a7a2ac71fd6a8a367ae7b10deb2950ada76b
