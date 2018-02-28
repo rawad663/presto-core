@@ -97,17 +97,19 @@ class Register(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        serializer_class = RegistrationSerializer(data=request.data)
+        serializer = RegistrationSerializer(data=request.data)
         # Creating new User
-        if serializer_class.is_valid():
-            User.objects.create_user(
-                serializer_class.initial_data['email'],
-                serializer_class.initial_data['username'],
-                serializer_class.initial_data['password']
-            )
-            return Response(serializer_class.data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            user = serializer.save()
+
+            # User.objects.create_user(
+            #     serializer.initial_data['email'],
+            #     serializer.initial_data['username'],
+            #     serializer.initial_data['password']
+            # )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # username = request.POST.get('username')
         # email = request.POST.get('email')
