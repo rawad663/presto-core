@@ -19,3 +19,12 @@ If source command doesnt work for WINDOWS:
 pip install Django==1.11
 
 pip install djangorestframework==3.7.7
+
+
+Debugging:  If trying to launch the app, by doing git push heroku master, and are getting the error: 
+	Error while running '$ python manage.py collectstatic --noinput'.
+
+You can run:
+	heroku config:set DISABLE_COLLECTSTATIC=1
+
+Look at https://devcenter.heroku.com/articles/django-assets#collectstatic-during-builds for more info

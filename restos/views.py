@@ -13,12 +13,12 @@ from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+# from django.http import HttpResponse
 
 # Create your views here.
 
-def index(request):
-    return HttpResponse("TESTING TO PUSH FROM MULTIPLE COLLABORATORS")
+# def index(request):
+#     return HttpResponse("TESTING TO PUSH FROM MULTIPLE COLLABORATORS")
 
 class RestoList(APIView):
     def get(self, request):
