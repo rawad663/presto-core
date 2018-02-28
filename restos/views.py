@@ -100,13 +100,13 @@ class Register(generics.CreateAPIView):
         serializer = RegistrationSerializer(data=request.data)
         # Creating new User
         if serializer.is_valid():
-            user = serializer.save()
+            # user = serializer.save()
 
-            # User.objects.create_user(
-            #     serializer.initial_data['email'],
-            #     serializer.initial_data['username'],
-            #     serializer.initial_data['password']
-            # )
+            User.objects.create_user(
+                serializer.initial_data['email'],
+                serializer.initial_data['username'],
+                serializer.initial_data['password']
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
