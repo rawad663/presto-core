@@ -105,9 +105,7 @@ class Register(generics.CreateAPIView):
             User.objects.create_user(
                 serializer.initial_data['email'],
                 serializer.initial_data['username'],
-                serializer.initial_data['password'],
-                serializer.initial_data['first_name'],
-                serializer.initial_data['last_name']
+                serializer.initial_data['password']
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
