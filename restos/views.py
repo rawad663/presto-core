@@ -2,15 +2,23 @@
 from __future__ import unicode_literals
 from restos.models import Resto
 from rest_framework import permissions, status, generics
-from restos.serializers import RestoSerializer
+from restos.serializers import RestoSerializer, UserSerializer, RegistrationSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from restos.serializers import UserSerializer
 from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
+from rest_framework import generics
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+from django.shortcuts import get_object_or_404
+# from django.http import HttpResponse
 
 # Create your views here.
+
+# def index(request):
+#     return HttpResponse("TESTING TO PUSH FROM MULTIPLE COLLABORATORS")
+
 class RestoList(APIView):
     def get(self, request):
         queryset = Resto.objects.all()
@@ -87,24 +95,37 @@ class UserDetail(APIView):
 
 class Register(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
-
+    serializer_class = RegistrationSerializer
     def post(self, request, *args, **kwargs):
+        serializer = RegistrationSerializer(data=request.data)
         # Creating new User
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
+        if serializer.is_valid():
+            user = serializer.save()
 
-        user = User.objects.create_user(username, email, password)
-        user.first_name = first_name
-        user.last_name = last_name
-        user.save()
+            # User.objects.create_user(
+            #     serializer.initial_data['email'],
+            #     serializer.initial_data['username'],
+            #     serializer.initial_data['password']
+            # )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Generating token for user
-        token = Token.objects.create(user=user)
-
-        return Response({'detail': 'User has been created successfully', 'Token': token.key})
+        # username = request.POST.get('username')
+        # email = request.POST.get('email')
+        # password = request.POST.get('password')
+        # first_name = request.POST.get('firstName')
+        # last_name = request.POST.get('lastName')
+        #
+        # user = User.objects.create_user(username, email, password)
+        # user.first_name = first_name
+        # user.last_name = last_name
+        # user.save()
+        #
+        # # Generating token for user
+        # token = Token.objects.create(user=user)
+        #
+        # return Response({'detail': 'User has been created successfully', 'Token': token.key})
 
 
 class ChangePassword(generics.CreateAPIView):
