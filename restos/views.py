@@ -102,8 +102,8 @@ class Register(generics.CreateAPIView):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
+        first_name = request.POST.get('firstName')
+        last_name = request.POST.get('lastName')
 
         user = User.objects.create_user(username, email, password)
         user.first_name = first_name
