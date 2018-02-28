@@ -95,7 +95,7 @@ class UserDetail(APIView):
 
 class Register(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
-
+    serializer_class = RegistrationSerializer
     def post(self, request, *args, **kwargs):
         serializer = RegistrationSerializer(data=request.data)
         # Creating new User
