@@ -9,10 +9,6 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from restos.serializers import UserSerializer
 from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
-from rest_framework import generics
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
 
 # Create your views here.
 class RestoList(APIView):
