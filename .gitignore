@@ -2,3 +2,6 @@ venv
 *.pyc
 staticfiles
 .env
+.vscode
+distribute_setup.py
+distribute_setup.py.py
