@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from restos.models import Resto
+from restos.models import Resto, User, Customer, Reservation
 from rest_framework import permissions, status, generics
 from restos.serializers import RestoSerializer, CustomerSerializer, ReservationSerializer, CustomerSimpleSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-#from django.contrib.auth.models import User
-from restos.models import User
 from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
 from rest_framework import generics
 from rest_framework.authtoken.models import Token
@@ -186,7 +184,7 @@ class LikeResto(APIView):
         serializer = CustomerSerializer(customer)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class Reserve(APIView):
+class MakeReservation(APIView):
     def post(self, request, customerPk, restoPk):
         user_customer = get_object_or_404(User, pk=customerPk)
         user_resto = get_object_or_404(User, pk=restoPk)
@@ -208,10 +206,20 @@ class Reserve(APIView):
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-def delete_reserve(request, pk):
+class ReserveDetail(APIView):
+    def get(self, request, pk):
+        reservation = get_object_or_404(Reservation, pk=pk)
+        serializer = CustomerSerializer(resto)
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
     reservation = get_object_or_404(Reservation, pk=pk)
-    reservation.delete()
-    return Response({"Message": "Reservation is deleted."}, status=status.HTTP_204_NO_CONTENT)
+    user = request.user
+    if user == reservation.customer.user or user == reservation.resto.user:
+        reservation.delete()
+        return Response({"Message": "Reservation is deleted."}, status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response({"Message": "User cannot delete a reservation that is not his own"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 

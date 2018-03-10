@@ -9,8 +9,7 @@ urlpatterns = [
     url('register/customer/', views.RegisterCustomer.as_view()),
     url('register/resto/', views.RegisterResto.as_view()),
     url('like-resto/([0-9]+)/', views.LikeResto.as_view()),
-    url('reserve/([0-9]+)/([0-9]+)/', views.Reserve.as_view()),
+    url('reserve/([0-9]+)/([0-9]+)/', views.MakeReservation.as_view()),
     url('reservations/', views.Reservations.as_view()),
-    url('reserve/([0-9]+)/delete/', views.delete_reserve),
-
+    url('reservations/([0-9]+)/', views.RestoDetail.as_view()),
 ]
