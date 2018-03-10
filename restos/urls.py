@@ -11,4 +11,6 @@ urlpatterns = [
     url('like-resto/([0-9]+)/', views.LikeResto.as_view()),
     url('reserve/([0-9]+)/([0-9]+)/', views.Reserve.as_view()),
     url('reservations/', views.Reservations.as_view()),
+    url('reserve/([0-9]+)/delete/', views.delete_reserve),
+
 ]

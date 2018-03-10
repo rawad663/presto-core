@@ -208,6 +208,13 @@ class Reserve(APIView):
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+def delete_reserve(request, pk):
+    reservation = get_object_or_404(Reservation, pk=pk)
+    reservation.delete()
+    return Response({"Message": "Reservation is deleted."}, status=status.HTTP_204_NO_CONTENT)
+
+
+
 class Reservations(APIView):
     def get(self, request):
         user = request.user
@@ -232,3 +239,4 @@ class Reservations(APIView):
         user.save()
 
         return Response({'detail': 'Password has been updated'}) '''
+
