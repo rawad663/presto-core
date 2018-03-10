@@ -1,15 +1,14 @@
 from django.conf.urls import url
-from rest_framework.urlpatterns import format_suffix_patterns
 from restos import views
+from rest_framework.authtoken import views as authViews
 
 urlpatterns = [
     url(r'^restos/$', views.RestoList.as_view()),
     url(r'^restos/([0-9]+)/$', views.RestoDetail.as_view()),
-    url(r'^users/([0-9]+)/$', views.UserDetail.as_view()),
-    #url('accounts/', include('django.contrib.auth.urls')),
-    #url('accounts/register/', views.Register.as_view(), name='register'), 
-    url('register/customer/', views.RegisterCustomer.as_view(), name='customer_register'),
-    url('register/resto/', views.RegisterResto.as_view(), name='resto_register'),
-    #url('change_password/', views.ChangePassword.as_view()),
-    # url(r'^testing/$', views.index, name='index')
+    url(r'^customers/([0-9]+)/$', views.CustomerDetail.as_view()),
+    url('register/customer/', views.RegisterCustomer.as_view()),
+    url('register/resto/', views.RegisterResto.as_view()),
+    url('like-resto/([0-9]+)/', views.LikeResto.as_view()),
+    url('reserve/([0-9]+)/([0-9]+)/', views.Reserve.as_view()),
+    url('reservations/', views.Reservations.as_view()),
 ]

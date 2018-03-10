@@ -1,6 +1,5 @@
 from django.conf.urls import url, include
 from django.contrib import admin
-from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views
 
 urlpatterns = [
@@ -10,7 +9,5 @@ urlpatterns = [
 
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls')),
-    url(r'^login/', views.obtain_auth_token),
+    url('login/', views.obtain_auth_token),
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)
