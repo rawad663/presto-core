@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from restos.models import Resto
 from rest_framework import permissions, status, generics
-from restos.serializers import RestoSerializer, CustomerSerializer, ReservationSerializer
+from restos.serializers import RestoSerializer, CustomerSerializer, ReservationSerializer, CustomerSimpleSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -133,11 +133,10 @@ class RegisterCustomer(generics.CreateAPIView):
     serializer_class = CustomerSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = CustomerSerializer(data=request.data)
+        serializer = CustomerSimpleSerializer(data=request.data)
         # Creating new User
         if serializer.is_valid():
-            serializer.save()
-            Token.objects.create(user=serializer)
+            Token.objects.create(user=serializer.save().user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -157,8 +156,7 @@ class RegisterResto(generics.CreateAPIView):
         serializer = RestoSerializer(data=request.data)
         # Creating new User
         if serializer.is_valid():
-            serializer.save()
-            Token.objects.create(user=serializer)
+            Token.objects.create(user=serializer.save().user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

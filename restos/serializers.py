@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            isResto=False
+            is_resto=False
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -27,7 +27,7 @@ class RestoSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
-        user.isResto = True
+        user.is_resto = True
         user.save()
 
         return Resto.objects.create(
@@ -45,16 +45,6 @@ class RestoSerializer(serializers.ModelSerializer):
 class CustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
     liked_restos = RestoSerializer(required=False, many=True)
-    
-    def create(self, validated_data):
-        user_data = validated_data.pop('user')
-        user = UserSerializer.create(UserSerializer(), validated_data=user_data)
-        user.isResto = False
-        user.save()
-
-        return Customer.objects.create(user=user)
-
-    #def update()
 
     class Meta:
         model = Customer
@@ -62,6 +52,14 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 class CustomerSimpleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user = UserSerializer.create(UserSerializer(), validated_data=user_data)
+        user.is_resto = False
+        user.save()
+
+        return Customer.objects.create(user=user)
 
     class Meta:
         model = Customer
