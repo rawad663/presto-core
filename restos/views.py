@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from restos.models import Resto
 from rest_framework import permissions, status, generics
-from restos.serializers import RestoSerializer, CustomerSerializer
+from restos.serializers import RestoSerializer, CustomerSerializer, ReservationSerializer, CustomerSimpleSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,10 +23,12 @@ from django.views.generic import CreateView
 #     return HttpResponse("TESTING TO PUSH FROM MULTIPLE COLLABORATORS")
 
 class RestoList(APIView):
+    #permissions
+
     def get(self, request):
-        queryset = Resto.objects.all()
-        serializer_class = RestoSerializer(queryset, many = True)
-        return Response(serializer_class.data)
+        restos = Resto.objects.all()
+        serializer = RestoSerializer(restos, many=True)
+        return Response(serializer.data)
 
 
 # This is the detail page
@@ -34,8 +36,8 @@ class RestoDetail(APIView):
     """
     Retrieve, update or delete a resto instance.
     """
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,) # SHOULD THIS NOT JUST BE IS OWNERORREADONLY? If you put authenticated too,
-    # then anyone who's authenticated might create or update a rest
+    #permission_classes = (IsOwnerOrReadOnly,)
+
     def get_object(self, pk):
         try:
             return Resto.objects.get(pk=pk)
@@ -60,6 +62,36 @@ class RestoDetail(APIView):
         resto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class CustomerDetail(APIView):
+    """
+    Retrieve, update or delete a resto instance.
+    """
+    #permission_classes = (IsOwnerOrReadOnly,)
+
+    def get_object(self, pk):
+        try:
+            return Customer.objects.get(pk=pk)
+        except Customer.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        customer = self.get_object(pk)
+        serializer = CustomerSerializer(resto)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        customer = self.get_object(pk)
+        serializer = CustomerSerializer(resto, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        customer = self.get_object(pk)
+        customer.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 """ 
 This is the user detail page.
@@ -68,8 +100,8 @@ There are permissions and cRUD actions available.
 """
 
 
-class UserDetail(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsSelfOrReadOnly)
+'''class UserDetail(APIView):
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsSelfOrReadOnly)
 
     def get_object(self, pk):
         try:
@@ -79,12 +111,12 @@ class UserDetail(APIView):
 
     def get(self, request, pk, format=None):
         user = self.get_object(pk)
-        serializer = CustomerSerializer(user)
+        serializer = UserFullSerializer(user)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         user = self.get_object(pk)
-        serializer = CustomerSerializer(user, data=request.data)
+        serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -93,7 +125,7 @@ class UserDetail(APIView):
     def delete(self, request, pk, format=None):
         user = self.get_object(pk)
         user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)'''
 
 
 class RegisterCustomer(generics.CreateAPIView):
@@ -101,13 +133,10 @@ class RegisterCustomer(generics.CreateAPIView):
     serializer_class = CustomerSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = CustomerSerializer(data=request.data)
+        serializer = CustomerSimpleSerializer(data=request.data)
         # Creating new User
         if serializer.is_valid():
-            serializer.save()
-            #token = Token.objects.create(user=serializer)
-            #serializer.data["token"] = token.key
-            #allData = {"data": serializer.data, "token": token.key}
+            Token.objects.create(user=serializer.save().user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -120,14 +149,14 @@ class RegisterCustomer(generics.CreateAPIView):
 
 
 class RegisterResto(generics.CreateAPIView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = RestoSerializer
+    #permission_classes = (permissions.AllowAny,)
+    #serializer_class = RestoSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = RestoSerializer(data=request.data)
         # Creating new User
         if serializer.is_valid():
-            serializer.save()
+            Token.objects.create(user=serializer.save().user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -138,8 +167,63 @@ class RegisterResto(generics.CreateAPIView):
         #
         # return Response({'detail': 'User has been created successfully', 'Token': token.key})
 
+class LikeResto(APIView):
+    def post(self, request, pk):
+        user_resto = get_object_or_404(User, pk=pk)
+        resto = None
+        if user_resto.is_resto:
+            resto = user_resto.resto
+        else:
+            return Response({"Message": "ID belongs to that of a customer. Only restos can be liked."}, status=status.HTTP_400_BAD_REQUEST)
 
-class ChangePassword(generics.CreateAPIView):
+        user = request.user
+        if user.is_resto == True:
+            return Response({"Message": "Resto cannot like another Resto"}, status=status.HTTP_400_BAD_REQUEST)
+        customer = user.customer
+        customer.liked_restos.add(resto)
+        customer.save()
+
+        serializer = CustomerSerializer(customer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class Reserve(APIView):
+    def post(self, request, customerPk, restoPk):
+        user_customer = get_object_or_404(User, pk=customerPk)
+        user_resto = get_object_or_404(User, pk=restoPk)
+
+        resto = None
+        customer = None
+
+        if not user_customer.is_resto:
+            customer = user_customer.customer
+        else:
+            return Response({"Message": "Customer ID belongs to that of a resto"}, status=status.HTTP_400_BAD_REQUEST)
+        if user_resto.is_resto:
+            resto = user_resto.resto
+        else:
+            return Response({"Message": "Resto ID belongs to that of a customer"}, status=status.HTTP_400_BAD_REQUEST)
+
+        reservation = ReservationSerializer.create(ReservationSerializer(), request.data, customer, resto)
+        reservation.save()
+        serializer = ReservationSerializer(reservation)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class Reservations(APIView):
+    def get(self, request):
+        user = request.user
+        if user.is_resto:
+            reservations = user.resto.reservation_set.all()
+        else:
+            reservations = user.customer.reservation_set.all()
+        serializer = ReservationSerializer(reservations, many=True)
+        return Response(serializer.data)
+
+
+
+
+
+
+''' class ChangePassword(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -147,4 +231,4 @@ class ChangePassword(generics.CreateAPIView):
         user.set_password(request.POST.get('new_password'))
         user.save()
 
-        return Response({'detail': 'Password has been updated'})
+        return Response({'detail': 'Password has been updated'}) '''
