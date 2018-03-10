@@ -12,13 +12,13 @@ login/ 	expects {"username": "", "password": ""} and returns {"token":" 9944b091
 
 restos/ 		gets you a list of all restaurants
 
-restos/<id>/		gets you info of a specific restaurant
+restos/id/		gets you info of a specific restaurant
 	
-customers/<id>/		gets you info of a specific customer
+customers/id/		gets you info of a specific customer
 	
-like-resto/<id>/	expects an empty POST
+like-resto/id/	expects an empty POST
 	
-reserve/<customerID>/<restoID>/	expects {"datetime": "YYYY-MM-DD HH:mm"}
+reserve/customerID/restoID/	expects {"datetime": "YYYY-MM-DD HH:mm"}
 	
 reservations/		gets you all user's reservations
 
