@@ -22,6 +22,8 @@ reserve/customerID/restoID/	expects {"datetime": "YYYY-MM-DD HH:mm"}
 	
 reservations/		gets you all user's reservations
 
+reservations/reservationID 	gives you reservation detail if it receives a GET request or deletes the reservation if it receives a DELETE request		
+
 **************************************
 
 If you don't have the virtualenv setup, follow these steps:
