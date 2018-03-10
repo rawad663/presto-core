@@ -20,6 +20,7 @@ django-rest-framework = "==0.1.0"
 djangorestframework = "==3.7.7"
 gunicorn = "*"
 idna = "==2.6"
+psycopg2
 pathlib = "==1.0.1"
 pew = "==1.1.2"
 pipenv = "==10.1.0"
