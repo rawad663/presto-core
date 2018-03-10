@@ -8,7 +8,7 @@ register/resto/		expects {"resto_name": "", "description": "", "phone_number": "
 
 register/customer/	expects {"username": "", "email": "", "first_name": "", "last_name": "", "password": ""}
 
-register/login/ 	expects {"username": "", "password": ""} and returns {"token":" 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b"}
+login/ 	expects {"username": "", "password": ""} and returns {"token":" 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b"}
 
 restos/ 		gets you a list of all restaurants
 
