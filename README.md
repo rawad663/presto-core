@@ -4,6 +4,10 @@ Restaurant Reservation - Core (BackEnd) Component
 
 **************API ROUTES**************
 
+| Api route | Type | Header |
+|--|--|--|--|
+| `register/resto/` | POST | NULL |
+
 register/resto/		expects {"resto_name": "", "description": "", "phone_number": "", "postal_code": "", "user": {"username": "", "email": "", "first_name": "", "last_name": "", "password": ""}}
 
 register/customer/	expects:
