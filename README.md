@@ -42,7 +42,7 @@ Restaurant Reservation - Core (BackEnd) Component
 - Post Body
 ```
 {
-	"user": {
+    "user": {
 		"username": "",
 		"email": "",
 		"first_name": "",
@@ -55,7 +55,14 @@ Restaurant Reservation - Core (BackEnd) Component
 - Response
 ```
 {
- // coming soon...
+    "user": {
+        "id": 6,
+        "first_name": "Welcom",
+        "last_name": "Home",
+        "email": "welcome@gmail.com",
+        "username": "welcomesir@gmail.com",
+        "is_resto": false
+    }
 }
 ```
 
