@@ -20,8 +20,7 @@ class Resto(models.Model):
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    liked_restos = models.ManyToManyField(Resto, blank=True, related_name='liked_restos')
-    disliked_restos = models.ManyToManyField(Resto, blank=True, related_name='disliked_restos')
+    liked_restos = models.ManyToManyField(Resto, blank=True)
 
 class Reservation(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
