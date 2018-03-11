@@ -84,12 +84,12 @@ import os
 
 ON_HEROKU = os.environ.get('ON_HEROKU')
 
-if ON_HEROKU:
-    DATABASE_URL = 'postgres://phjtvicgngzvmj:c4cf7232fc629ce6454c598a8030d54d30df68f3f922328eacef8b47227b090b@ec2-107-20-249-48.compute-1.amazonaws.com:5432/dq2ualop41h4e'
-    DATABASES = {'default':dj_database_url.config(conn_max_age=600, ssl_require=True)}
-else:
-    DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
-    DATABASES = {'default':dj_database_url.config(default=DATABASE_URL)}
+#if ON_HEROKU:
+DATABASE_URL = 'postgres://phjtvicgngzvmj:c4cf7232fc629ce6454c598a8030d54d30df68f3f922328eacef8b47227b090b@ec2-107-20-249-48.compute-1.amazonaws.com:5432/dq2ualop41h4e'
+DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True, default=DATABASE_URL)}
+#else:
+#    DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+#    DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 
 
 # Password validation
