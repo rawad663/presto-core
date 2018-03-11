@@ -79,14 +79,14 @@ WSGI_APPLICATION = 'Presto.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 import dj_database_url
+
+if ON_HEROKU:
+    DATABASE_URL = 'postgres://phjtvicgngzvmj:c4cf7232fc629ce6454c598a8030d54d30df68f3f922328eacef8b47227b090b@ec2-107-20-249-48.compute-1.amazonaws.com:5432/dq2ualop41h4e'
+else:
+    DATABASE_URL = 'sqlite://' + os.path.join(BASE_DIR, 'db.sqlite3')
+
+DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 DATABASES['default'] = dj_database_url.config()
 
 # Password validation
