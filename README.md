@@ -4,9 +4,12 @@ Restaurant Reservation - Core (BackEnd) Component
 
 **************API ROUTES**************
 
-| Api route | Type | Header |
-|---|---|--|---|
-| `register/resto/` | POST | NULL |
+
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
 
 register/resto/		expects {"resto_name": "", "description": "", "phone_number": "", "postal_code": "", "user": {"username": "", "email": "", "first_name": "", "last_name": "", "password": ""}}
 
