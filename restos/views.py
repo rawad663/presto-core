@@ -177,8 +177,37 @@ class LikeResto(APIView):
         user = request.user
         if user.is_resto == True:
             return Response({"Message": "Resto cannot like another Resto"}, status=status.HTTP_400_BAD_REQUEST)
+        
         customer = user.customer
         customer.liked_restos.add(resto)
+        # if liked resto was a disliked resto, remove that resto from disliked resto list
+        if resto in customer.disliked_restos.all():
+            customer.disliked_restos.remove(resto)
+        customer.save()
+
+        serializer = CustomerSerializer(customer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class DislikeResto(APIView):
+    def post(self, request, pk):
+        # get the disliked resto (if it isnt a 404 error)?
+        user_resto = get_object_or_404(User, pk = pk)
+        resto = None
+        # if requested resto to be disliked is a resto
+        if user_resto.is_resto:
+            resto = user_resto.resto
+        else:
+            return Response({"Message": "ID belongs to that of a customer. Only restos can be disliked."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        if user.is_resto == True:
+            return Response({"Message": "Resto cannot dislike another Resto"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        customer = user.customer
+        customer.disliked_restos.add(resto)
+        # if disliked resto was a liked resto, remove that resto from liked resto list
+        if resto in customer.liked_restos.all():
+            customer.liked_restos.remove(resto)
         customer.save()
 
         serializer = CustomerSerializer(customer)
@@ -217,7 +246,7 @@ class ReserveDetail(APIView):
         user = request.user
         if user == reservation.customer.user or user == reservation.resto.user:
             reservation.delete()
-            return Response({"Message": "Reservation is deleted."}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"Message": "Reservation is deleted"}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({"Message": "User cannot delete a reservation that is not his own"}, status=status.HTTP_400_BAD_REQUEST)
 
