@@ -217,7 +217,7 @@ class ReserveDetail(APIView):
         user = request.user
         if user == reservation.customer.user or user == reservation.resto.user:
             reservation.delete()
-            return Response({"Message": "Reservation is deleted."}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"Message": "Reservation is deleted"}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({"Message": "User cannot delete a reservation that is not his own"}, status=status.HTTP_400_BAD_REQUEST)
 
