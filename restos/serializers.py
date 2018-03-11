@@ -45,10 +45,11 @@ class RestoSerializer(serializers.ModelSerializer):
 class CustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
     liked_restos = RestoSerializer(required=False, many=True)
+    disliked_restos = RestoSerializer(required=False, many=True)
 
     class Meta:
         model = Customer
-        fields = ('user', 'liked_restos')
+        fields = ('user', 'liked_restos', 'disliked_restos')
 
 class CustomerSimpleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
