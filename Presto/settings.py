@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'restos.apps.RestosConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'restos.apps.RestosConfig',
 ]
 
 MIDDLEWARE = [
@@ -89,8 +89,8 @@ if ON_HEROKU:
 else:
     DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 
-DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
-#DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+#DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
