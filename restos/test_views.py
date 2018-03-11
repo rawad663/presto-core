@@ -63,5 +63,18 @@ self.failUnlessEqual(response.status_code, status.HTTP_201_CREATED)
 self.assertEqual(Customer.objects.count(), 0)  
 
 
+"""
+test for Login, should work for both customer and resto
+need to have login implemented first 
+class LoginViewTests(TestCase)
+    def setUp(self):
+        self.credentials = {
+            'username': 'testcustomer',
+            'password': 'verysecurepassword'
+        }
+        User.objects.create_user(**self.credentials)
 
-        
+    def test_login(self):
+        response = self.client.post('/login', self.credentials, follow=True)
+        self.assertTrue(response.context['user'].is_authenticated)
+"""
