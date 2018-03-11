@@ -88,6 +88,7 @@ DATABASES = {
 
 import dj_database_url
 DATABASES['default'] = dj_database_url.config()
+DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
 
 
 # Password validation
