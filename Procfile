@@ -1,0 +1,1 @@
+web: gunicorn Presto.wsgi:application --log-file -
