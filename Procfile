@@ -1,1 +1,1 @@
-web: gunicorn presto-core.wsgi --log-file -
+web: gunicorn Presto.wsgi:application --log-file -
