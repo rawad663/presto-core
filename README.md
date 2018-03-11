@@ -5,15 +5,41 @@ Restaurant Reservation - Core (BackEnd) Component
 **************API ROUTES**************
 
 
-| Tables        | Are           | Cool  |
+| API Route     | Type          | Header|
 | ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+| `register/resto/`      | POST          | NULL |
 
-register/resto/		expects {"resto_name": "", "description": "", "phone_number": "", "postal_code": "", "user": {"username": "", "email": "", "first_name": "", "last_name": "", "password": ""}}
+- Post Body
+ ```
+ {
+    "resto_name": "",
+    "description": "",
+    "phone_number": "",
+    "postal_code": "",
+    "user": {
+        "username": "",
+        "email": "", 
+        "first_name": "",
+        "last_name": "",
+         "password": ""
+    }
+ }
+ ```
 
-register/customer/	expects:
+ 
+- Response
+
+```
+{
+ // coming soon...
+}
+```
+
+| API Route           | Type          | Header|
+| -------------       |:-------------:| -----:|
+| `register/customer/`| POST          | NULL |
+  
+- Post Body
 ```
 {
 	"user": {
@@ -25,15 +51,28 @@ register/customer/	expects:
 	}
 }
 ```
+ 
+- Response
+```
+{
+ // coming soon...
+}
+```
 
-login/ 	expects:
+| API Route     | Type          | Header|
+| ------------- |:-------------:| -----:|
+| `login/`      | POST          | NULL |
+ 
+- Post Body
 ```
 {
 	"username": "",
 	"password": ""
 }
+```
  
-// returns
+- Response
+```
 {
 	"token": " 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b"
 }
