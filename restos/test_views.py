@@ -15,6 +15,36 @@ class RegistrationViewTests(APITestCase):
         Resto.objects.all().delete()
         Customer.objects.all().delete()
 
+    def test_empty_customer_model(self):
+
+        self.assertEqual(Customer.objects.all().count(), 0)
+    
+    
+    def test_empty_resto_model(self):
+
+        self.assertEqual(Resto.objects.all().count(), 0)
+
+
+    def test_invalid_postalcode(self):
+        response = self.client.post(reverse('register_resto'), 
+        data= {
+            "resto_name": "Alice's dinner",
+            "description": "great food",
+            "phone_number": "12345678",
+            "postal_code": "H1H2H3H1H2H3H1H2H3H1H2",
+            "user": {
+            "username": "User1",
+            "email": "user1@foo.com",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "password":"pass"}},
+        format='json'
+        )
+        self.assertIsNot(response, Resto)  
+
+
+        
+
 
     def test_register_customer_view(self):
         url= reverse('register_customer')
@@ -63,7 +93,9 @@ class RegistrationViewTests(APITestCase):
 
         resto = Resto.objects.get(pk=1)
         self.assertEqual(resto.resto_name, "Alice's dinner")
+        self.assertEqual(resto.description, "great food")
         self.assertEqual(Resto.objects.all().count(), 1)
+
 
 
 class RestoListViewTest(APITestCase):
@@ -112,8 +144,10 @@ class RestoListViewTest(APITestCase):
         format='json'
         )
 
-        resto = Resto.objects.get(pk=1)
-        resto_bis = Resto.objects.get(pk=2)
+
+        url = reverse('resto_list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(len(response.data), 2) 
 
 
 
