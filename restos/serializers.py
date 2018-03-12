@@ -31,7 +31,7 @@ class RestoSerializer(serializers.ModelSerializer):
         user.save()
 
         return Resto.objects.create(
-            name=validated_data['name'],
+            resto_name=validated_data['resto_name'],
             description=validated_data['description'],
             user=user
         )
