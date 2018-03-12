@@ -34,7 +34,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
-        user = User.object.get(pk=token.user_id)
+        user = User.objects.get(pk=token.user_id)
         serializer = UserSerializer(user)
         return Response({'token': token.key, 'user': serializer.data})
 
