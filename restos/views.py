@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from restos.models import Resto, User, Customer, Reservation
 from rest_framework import permissions, status, generics
-from restos.serializers import RestoSerializer, CustomerSerializer, ReservationSerializer, CustomerSimpleSerializer
+from restos.serializers import RestoSerializer, CustomerSerializer, ReservationSerializer, CustomerSimpleSerializer, UserSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.views.generic import CreateView
+from rest_framework.authtoken.views import ObtainAuthToken
 # from django.http import HttpResponse
 
 # Create your views here.
@@ -27,6 +28,15 @@ class RestoList(APIView):
         restos = Resto.objects.all()
         serializer = RestoSerializer(restos, many=True)
         return Response(serializer.data)
+
+
+class CustomObtainAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        user = User.object.get(pk=token.user_id)
+        serializer = UserSerializer(user)
+        return Response({'token': token.key, 'user': serializer.data})
 
 
 # This is the detail page
@@ -74,7 +84,7 @@ class CustomerDetail(APIView):
 
     def get(self, request, pk, format=None):
         customer = self.get_object(pk)
-        serializer = CustomerSerializer(resto)
+        serializer = CustomerSerializer(customer)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
