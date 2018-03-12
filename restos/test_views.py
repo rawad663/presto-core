@@ -1,9 +1,7 @@
 from django.contrib.auth.models import User
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from rest_framework.test import APITestCase
 from django.core.urlresolvers import reverse
-from django.contrib.messages.middleware import MessageMiddleware
-from django.contrib.sessions.middleware import SessionMiddleware
 
 from .views import *
 from .models import *
@@ -11,19 +9,6 @@ from .models import *
 
 class RegistrationViewTests(APITestCase):
 
-
-    def setUp(self):
-  
-       ''' self.u1 = User.objects.create(username='User1', first_name='Alice', last_name='Smith', email='user1@foo.com', password='pass', is_resto=True)
-        self.u1.save()
-        self.u2 = User.objects.create(username='User2', first_name='Bob', last_name='Frank', email='user2@foo.com', password='pass', is_resto=False)
-        self.u2.save()
-        self.u3 = User.objects.create(username='User3', first_name='Liz', last_name='Abo', email='user3@foo.com', password='pass', is_resto=False)
-        self.u3.save()
-        self.u4 = Resto.objects.create(user=self.u1, created='2017-03-03', resto_name = "Alice's dinner", description='great food', phone_number="12345678", postal_code="H1H2H3")
-        self.u4.save()
-        self.u5 = Customer.objects.create(user=self.u2)
-        self.u6 = Customer.objects.create(user=self.u3)'''
 
     def tearDown(self):
         User.objects.all().delete()
@@ -79,6 +64,56 @@ class RegistrationViewTests(APITestCase):
         resto = Resto.objects.get(pk=1)
         self.assertEqual(resto.resto_name, "Alice's dinner")
         self.assertEqual(Resto.objects.all().count(), 1)
+
+
+class RestoListViewTest(APITestCase):
+
+    def tearDown(self):
+        User.objects.all().delete()
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
+
+
+    def test_empty_restolist(self):
+
+        url = reverse('resto_list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(len(response.data), 0)    
+
+    def test_restolist_view(self):
+  
+        response = self.client.post(reverse('register_resto'), 
+        data= {
+            "resto_name": "Alice's dinner",
+            "description": "great food",
+            "phone_number": "12345678",
+            "postal_code": "H1H2H3",
+            "user": {
+            "username": "User1",
+            "email": "user1@foo.com",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "password":"pass"}},
+        format='json'
+        )
+
+        response_bis = self.client.post(reverse('register_resto'), 
+        data= {
+            "resto_name": "Bob's pizza",
+            "description": "pizza&pasta",
+            "phone_number": "12345678",
+            "postal_code": "H1H2H3",
+            "user": {
+            "username": "User2",
+            "email": "user2@foo.com",
+            "first_name": "Bob",
+            "last_name": "Frank",
+            "password":"pass"}},
+        format='json'
+        )
+
+        resto = Resto.objects.get(pk=1)
+        resto_bis = Resto.objects.get(pk=2)
 
 
 

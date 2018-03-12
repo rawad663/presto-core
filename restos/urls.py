@@ -3,7 +3,7 @@ from restos import views
 from rest_framework.authtoken import views as authViews
 
 urlpatterns = [
-    url(r'^restos/$', views.RestoList.as_view()),
+    url(r'^restos/$', views.RestoList.as_view(), name='resto_list'),
     url(r'^restos/([0-9]+)/$', views.RestoDetail.as_view()),
     url(r'^customers/([0-9]+)/$', views.CustomerDetail.as_view()),
     url('login/', views.CustomObtainAuthToken.as_view()),
