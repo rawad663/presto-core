@@ -9,5 +9,5 @@ urlpatterns = [
 
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls')),
-    url('login/', views.obtain_auth_token),
+    url(r'^api-token-auth/', views.obtain_auth_token),
 ]
