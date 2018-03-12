@@ -56,8 +56,6 @@ class RegistrationViewTests(APITestCase):
         }
         response1 = self.client.post(url, data=form_data, format='json')
 
-        print(response.data)
-        print(response1.data)
 
         self.assertEqual(Customer.objects.all().count(), 2)  
 
@@ -78,8 +76,8 @@ class RegistrationViewTests(APITestCase):
         format='json'
         )
 
-
-        print(response.data)
+        resto = Resto.objects.get(pk=1)
+        self.assertEqual(resto.resto_name, "Alice's dinner")
         self.assertEqual(Resto.objects.all().count(), 1)
 
 
