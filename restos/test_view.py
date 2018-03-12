@@ -15,17 +15,18 @@ class RegistrationViewTests(APITestCase):
         Resto.objects.all().delete()
         Customer.objects.all().delete()
 
-    def test_empty_customer_model(self):
+    def test_emptycustomermodel(self):
 
         self.assertEqual(Customer.objects.all().count(), 0)
     
     
-    def test_empty_resto_model(self):
+    def test_emptyrestomodel(self):
 
         self.assertEqual(Resto.objects.all().count(), 0)
 
 
-    def test_invalid_postalcode(self):
+    def test_invalidpostalcode(self):
+        
         response = self.client.post(reverse('register_resto'), 
         data= {
             "resto_name": "Alice's dinner",
@@ -40,13 +41,38 @@ class RegistrationViewTests(APITestCase):
             "password":"pass"}},
         format='json'
         )
-        self.assertIsNot(response, Resto)  
+
+       
+       print(response.data)
+        self.assertIsNot(response, Resto) 
+        self.assertEqual(Resto.objects.all().count(), 0)
+
+    
+    def test_invalidphonenumber(self):
+        
+        response = self.client.post(reverse('register_resto'), 
+        data= {
+            "resto_name": "Alice's dinner",
+            "description": "great food",
+            "phone_number": "1234567891234567890012",
+            "postal_code": "H1H2H3",
+            "user": {
+            "username": "User1",
+            "email": "user1@foo.com",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "password":"pass"}},
+        format='json'
+        )
+
+        self.assertEqual(Resto.objects.all().count(), 0)    
+        self.assertIsNot(response, Resto)       
 
 
         
 
 
-    def test_register_customer_view(self):
+    def test_registercustomerview(self):
         url= reverse('register_customer')
         form_data= {
         "user": {
@@ -75,7 +101,7 @@ class RegistrationViewTests(APITestCase):
         self.assertEqual(Customer.objects.all().count(), 2)  
 
 
-    def test_registration_resto_view(self):
+    def test_registrationrestoview(self):
         response = self.client.post(reverse('register_resto'), 
         data= {
             "resto_name": "Alice's dinner",
@@ -106,13 +132,13 @@ class RestoListViewTest(APITestCase):
         Customer.objects.all().delete()
 
 
-    def test_empty_restolist(self):
+    def test_emptyrestolist(self):
 
         url = reverse('resto_list')
         response = self.client.get(url, format='json')
         self.assertEqual(len(response.data), 0)    
 
-    def test_restolist_view(self):
+    def test_restolistview(self):
   
         response = self.client.post(reverse('register_resto'), 
         data= {
@@ -143,11 +169,12 @@ class RestoListViewTest(APITestCase):
             "password":"pass"}},
         format='json'
         )
-
-
+        
         url = reverse('resto_list')
         response = self.client.get(url, format='json')
+
         self.assertEqual(len(response.data), 2) 
+
 
 
 
