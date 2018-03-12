@@ -14,7 +14,7 @@ class RegistrationViewTests(APITestCase):
 
     def setUp(self):
   
-        self.u1 = User.objects.create(username='User1', first_name='Alice', last_name='Smith', email='user1@foo.com', password='pass', is_resto=True)
+       ''' self.u1 = User.objects.create(username='User1', first_name='Alice', last_name='Smith', email='user1@foo.com', password='pass', is_resto=True)
         self.u1.save()
         self.u2 = User.objects.create(username='User2', first_name='Bob', last_name='Frank', email='user2@foo.com', password='pass', is_resto=False)
         self.u2.save()
@@ -23,7 +23,7 @@ class RegistrationViewTests(APITestCase):
         self.u4 = Resto.objects.create(user=self.u1, created='2017-03-03', resto_name = "Alice's dinner", description='great food', phone_number="12345678", postal_code="H1H2H3")
         self.u4.save()
         self.u5 = Customer.objects.create(user=self.u2)
-        self.u6 = Customer.objects.create(user=self.u3)
+        self.u6 = Customer.objects.create(user=self.u3)'''
 
     def tearDown(self):
         User.objects.all().delete()
@@ -56,6 +56,9 @@ class RegistrationViewTests(APITestCase):
         }
         response1 = self.client.post(url, data=form_data, format='json')
 
+        print(response.data)
+        print(response1.data)
+
         self.assertEqual(Customer.objects.all().count(), 2)  
 
 
@@ -76,8 +79,9 @@ class RegistrationViewTests(APITestCase):
         )
 
 
-        
-        self.assertEqual(Resto.objects.all().count(), 1)  
+        print(response.data)
+        self.assertEqual(Resto.objects.all().count(), 1)
+
 
 
 
