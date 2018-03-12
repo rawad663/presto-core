@@ -42,10 +42,8 @@ class RegistrationViewTests(APITestCase):
         format='json'
         )
 
-       
-       print(response.data)
-        self.assertIsNot(response, Resto) 
         self.assertEqual(Resto.objects.all().count(), 0)
+        self.assertIsNot(response, Resto) 
 
     
     def test_invalidphonenumber(self):
@@ -90,8 +88,8 @@ class RegistrationViewTests(APITestCase):
         "user": {
         "username": "User3",
         "email": "user3@foo.com",
-        "first_name": "Bobd",
-        "last_name": "Frank",
+        "first_name": "Leo",
+        "last_name": "Abraham",
         "password": "pass"
             }
         }
@@ -183,18 +181,18 @@ class RestoListViewTest(APITestCase):
 
 
 
-'''
-test for Login, should work for both customer and resto
-    need to have login implemented first 
-    class LoginViewTests(TestCase)
-        def setUp(self):
-            self.credentials = {
-                'username': 'testcustomer',
-                'password': 'verysecurepassword'
-            }
-            User.objects.create_user(**self.credentials)
 
-        def test_login(self):
-            response = self.client.post('/login', self.credentials, follow=True)
-            self.assertTrue(response.context['user'].is_authenticated)
+'''test for Login, should work for both customer and resto
+    need to have login implemented first
+class LoginViewTests(TestCase):
+    def setUp(self):
+        self.credentials = {
+            'username': 'testcustomer',
+            'password': 'verysecurepassword'
+            }
+        User.objects.create_user(**self.credentials)
+
+    def test_login(self):
+        response = self.client.post('/login', self.credentials, follow=True)
+        self.assertTrue(response.context['user'].is_authenticated)
 '''
