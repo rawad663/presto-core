@@ -92,7 +92,7 @@ else:
     DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}'''
 
 # If running on heroku
-'''DATABASES = {
+DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
          'NAME': 'dq2ualop41h4e',
@@ -101,15 +101,15 @@ else:
          'HOST': 'ec2-107-20-249-48.compute-1.amazonaws.com',
          'PORT': '5432',
      }
-}'''
+}
 
 #if running locally
-DATABASES = {
+'''DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.sqlite3',
          'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
      }
-}
+}'''
 
 
 # Password validation
