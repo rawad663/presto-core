@@ -157,8 +157,8 @@ class RegisterCustomer(generics.CreateAPIView):
 
 
 class RegisterResto(generics.CreateAPIView):
-    #permission_classes = (permissions.AllowAny,)
-    #serializer_class = RestoSerializer
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = RestoSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = RestoSerializer(data=request.data)
