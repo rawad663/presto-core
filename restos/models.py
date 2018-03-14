@@ -12,8 +12,8 @@ class Resto(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     resto_name = models.CharField(max_length=100, blank=True, default='')
     description = models.TextField(default='')
-    phone_number = models.CharField(max_length=20)
-    postal_code = models.CharField(max_length=10)
+    #phone_number = models.CharField(max_length=20)
+    #postal_code = models.CharField(max_length=10)
 
     class Meta:
         ordering = ('created',)
