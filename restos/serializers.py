@@ -33,8 +33,8 @@ class RestoSerializer(serializers.ModelSerializer):
         return Resto.objects.create(
             resto_name=validated_data['resto_name'],
             description=validated_data['description'],
-            #phone_number=validated_data['phone_number'],
-            #postal_code=validated_data['postal_code'],
+            phone_number=validated_data['phone_number'],
+            postal_code=validated_data['postal_code'],
             user=user
         )
 
@@ -42,7 +42,7 @@ class RestoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resto
-        fields = ('user', 'resto_name', 'description')#, 'phone_number', 'postal_code')
+        fields = ('user', 'resto_name', 'description', 'phone_number', 'postal_code')
 
 class CustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
