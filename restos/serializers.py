@@ -42,7 +42,7 @@ class RestoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resto
-        fields = ('user', 'resto_name', 'description', 'phone_number', 'postal_code')
+        fields = ('user', 'resto_name', 'description')#, 'phone_number', 'postal_code')
 
 class CustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
