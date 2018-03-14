@@ -34,7 +34,7 @@ class RestoSerializer(serializers.ModelSerializer):
             resto_name=validated_data['resto_name'],
             description=validated_data['description'],
             #phone_number=validated_data['phone_number'],
-            postal_code=validated_data['postal_code'],
+            #postal_code=validated_data['postal_code'],
             user=user
         )
 
