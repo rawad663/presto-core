@@ -14,7 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
             is_resto=False
         )
         user.set_password(validated_data['password'])
-        user.save()
         return user
 
     class Meta:
@@ -28,21 +27,24 @@ class RestoSerializer(serializers.ModelSerializer):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
         user.is_resto = True
-        user.save()
 
-        return Resto.objects.create(
+        resto =  Resto.objects.create(
             resto_name=validated_data['resto_name'],
             description=validated_data['description'],
             phone_number=validated_data['phone_number'],
             postal_code=validated_data['postal_code'],
+            address=validated_data['address'],
             user=user
         )
+        user.save()
+        resto.save()
+        return resto
 
     #def update()
 
     class Meta:
         model = Resto
-        fields = ('user', 'resto_name', 'description', 'phone_number', 'postal_code')
+        fields = ('user', 'resto_name', 'description', 'phone_number', 'postal_code', 'address')
 
 class CustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
@@ -76,11 +78,12 @@ class ReservationSerializer(serializers.ModelSerializer):
         return Reservation.objects.create(
             customer=customer,
             resto=resto,
-            datetime=validated_data["datetime"]
+            datetime=validated_data["datetime"],
+            status='p'
         )
 
     #def update()
 
     class Meta:
         model = Reservation
-        fields = ('customer', 'resto', 'datetime')
+        fields = ('customer', 'resto', 'datetime', 'status')

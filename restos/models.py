@@ -10,10 +10,11 @@ class User(AbstractUser):
 class Resto(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     created = models.DateTimeField(auto_now_add=True)
-    resto_name = models.CharField(max_length=100, blank=True, default='')
+    resto_name = models.CharField(max_length=100, default='') # remove blank
     description = models.TextField(default='')
-    phone_number = models.CharField(max_length=20)
-    postal_code = models.CharField(max_length=10)
+    phone_number = models.CharField(max_length=20, default='')
+    postal_code = models.CharField(max_length=10, default='')
+    address = models.CharField(max_length=30, default='')
 
     class Meta:
         ordering = ('created',)
@@ -27,3 +28,10 @@ class Reservation(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     resto = models.ForeignKey(Resto, on_delete=models.CASCADE)
     datetime = models.DateTimeField(auto_now=False, auto_now_add=False, blank=False)
+
+    STATUSCHOICE = (
+        ('a', 'Accepted'),
+        ('d', 'Declined'),
+        ('p', 'Pending'),
+    )
+    status = models.CharField(max_length=1, choices=STATUSCHOICE, default='p')

@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from restos import views
-from rest_framework.authtoken import views as authViews
 
 urlpatterns = [
     url(r'^restos/$', views.RestoList.as_view(), name='resto_list'),
@@ -13,5 +12,6 @@ urlpatterns = [
     url('dislike-resto/([0-9]+)/', views.DislikeResto.as_view()),
     url('reserve/([0-9]+)/([0-9]+)/', views.MakeReservation.as_view()),
     url('reservations/', views.Reservations.as_view()),
-    url('reservations/([0-9]+)/', views.RestoDetail.as_view()),
+    url('reservations/([0-9]+)/', views.ReserveDetail.as_view()),
+    url('reservations/([0-9]+)/accept/', views.AcceptReservation.as_view()),
 ]

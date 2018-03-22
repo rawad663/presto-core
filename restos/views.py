@@ -10,7 +10,6 @@ from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
 from rest_framework import generics
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.views.generic import CreateView
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -65,40 +64,34 @@ class RestoDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        resto = self.get_object(pk)
-        resto.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    # def delete(self, request, pk, format=None):
+    #     resto = self.get_object(pk)
+    #     resto.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 class CustomerDetail(APIView):
     """
     Retrieve, update or delete a resto instance.
     """
-    #permission_classes = (IsOwnerOrReadOnly,)
-
-    def get_object(self, pk):
-        try:
-            return Customer.objects.get(pk=pk)
-        except Customer.DoesNotExist:
-            raise Http404
+    permission_classes = (IsOwnerOrReadOnly,)
 
     def get(self, request, pk, format=None):
-        customer = self.get_object(pk)
+        customer = get_object_or_404(Customer, pk=pk)
         serializer = CustomerSerializer(customer)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        customer = self.get_object(pk)
+        customer = get_object_or_404(Customer, pk=pk)
         serializer = CustomerSerializer(resto, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        customer = self.get_object(pk)
-        customer.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    # def delete(self, request, pk, format=None):
+    #     customer = self.get_object(pk)
+    #     customer.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 """ 
@@ -240,7 +233,7 @@ class MakeReservation(APIView):
         else:
             return Response({"Message": "Resto ID belongs to that of a customer"}, status=status.HTTP_400_BAD_REQUEST)
 
-        reservation = ReservationSerializer.create(ReservationSerializer(), request.data, customer, resto)
+        reservation = ReservationSerializer(request.data, customer, resto)
         reservation.save()
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -272,8 +265,16 @@ class Reservations(APIView):
         serializer = ReservationSerializer(reservations, many=True)
         return Response(serializer.data)
 
-
-
+class AcceptReservation(APIView):
+    def put(self, request, pk):
+        reservation = get_object_or_404(Reservation, pk=pk)
+        user = request.user
+        if user != reservation.resto.user:
+            return Response({"Message": "Resto cannot accept a reservation that is not attributed to him"}, status=status.HTTP_400_BAD_REQUEST)
+        reservation.status = 'a'
+        reservation.save()
+        serializer = ReservationSerializer(reservation)
+        return Response(serializer.data, status=status.HTTP_200_OK) 
 
 
 
