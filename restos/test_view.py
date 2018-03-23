@@ -33,6 +33,7 @@ class RegistrationViewTests(APITestCase):
             "description": "great food",
             "phone_number": "12345678",
             "postal_code": "H1H2H3H1H2H3H1H2H3H1H2",
+            "address":"123 rue du fort",
             "user": {
             "username": "User1",
             "email": "user1@foo.com",
@@ -54,6 +55,7 @@ class RegistrationViewTests(APITestCase):
             "description": "great food",
             "phone_number": "1234567891234567890012",
             "postal_code": "H1H2H3",
+            "address":"456 rue du fort",
             "user": {
             "username": "User1",
             "email": "user1@foo.com",
@@ -106,6 +108,7 @@ class RegistrationViewTests(APITestCase):
             "description": "great food",
             "phone_number": "12345678",
             "postal_code": "H1H2H3",
+            "address":"123 rue du fort",
             "user": {
             "username": "User1",
             "email": "user1@foo.com",
@@ -144,6 +147,7 @@ class RestoListViewTest(APITestCase):
             "description": "great food",
             "phone_number": "12345678",
             "postal_code": "H1H2H3",
+            "address":"123 rue du fort",
             "user": {
             "username": "User1",
             "email": "user1@foo.com",
@@ -159,6 +163,7 @@ class RestoListViewTest(APITestCase):
             "description": "pizza&pasta",
             "phone_number": "12345678",
             "postal_code": "H1H2H3",
+            "address":"456 rue du fort",
             "user": {
             "username": "User2",
             "email": "user2@foo.com",
@@ -187,6 +192,7 @@ class RestoLikeDislikeTest(APITestCase):
             "description": "great food",
             "phone_number": "12345678",
             "postal_code": "H1H2H3",
+            "address":"123 rue du fort",
             "user": {
             "username": "User1",
             "email": "user1@foo.com",
@@ -196,16 +202,19 @@ class RestoLikeDislikeTest(APITestCase):
         format='json'
         )
 
-
+'''
 class ReservationViewTest(APITestCase):
     def tearDown(self):
         User.objects.all().delete()
         Resto.objects.all().delete()
         Customer.objects.all().delete()
-    
-    def test_reservation_customer_view(self):
+
     def test_accept_reservation_resto_view(self):
+
+    def test_reservation_customer_view(self):
+
     def test_cancel_reservation_customer_view(self):
+
     def test_decline_reservation_resto_view(self):
 
 
@@ -232,7 +241,7 @@ class LoginViewTest(APITestCase):
     def test_login_resto_view(self):
 
 
-'''test for Login, should work for both customer and resto
+test for Login, should work for both customer and resto
     need to have login implemented first
 class LoginViewTests(APITestCase):
     def setUp(self):
