@@ -175,23 +175,10 @@ class RestoListViewTest(APITestCase):
 
 
 class RestoLikeDislikeTest(APITestCase):
-
-<<<<<<< HEAD
-class ReservationViewTest(APITestCase):
-    def tearDown(self):
-        User.objects.all().delete()
-        Resto.objects.all().delete()
-        Customer.objects.all().delete()
     
-    def test_reservation_customer_view(self):
-    def test_accept_reservation_resto_view(self):
-    def test_cancel_reservation_customer_view(self):
-    def test_decline_reservation_resto_view(self):
-=======
     def tearDown(self):
         User.objects.all().delete()
         Resto.objects.all().delete()  
->>>>>>> origin/master
 
     def setUp(self):
         response = self.client.post(reverse('register_resto'), 
@@ -209,29 +196,26 @@ class ReservationViewTest(APITestCase):
         format='json'
         )
 
-<<<<<<< HEAD
+
+class ReservationViewTest(APITestCase):
+    def tearDown(self):
+        User.objects.all().delete()
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
+    
+    def test_reservation_customer_view(self):
+    def test_accept_reservation_resto_view(self):
+    def test_cancel_reservation_customer_view(self):
+    def test_decline_reservation_resto_view(self):
+
+
+
 class EditCustomerViewTest(APITestCase):
     def tearDown(self):
         User.objects.all().delete()
         Resto.objects.all().delete()
         Customer.objects.all().delete()
-=======
-        response_bis = self.client.post(reverse('register_resto'), 
-        data= {
-            "resto_name": "Bob's pizza",
-            "description": "pizza&pasta",
-            "phone_number": "12345678",
-            "postal_code": "H1H2H3",
-            "user": {
-            "username": "User2",
-            "email": "user2@foo.com",
-            "first_name": "Bob",
-            "last_name": "Frank",
-            "password":"pass"}},
-        format='json'
-        )
-        
->>>>>>> origin/master
+
 
     def test_edit_first_name_customer_view(self):
     def test_edit_last_name_customer_view(self):
