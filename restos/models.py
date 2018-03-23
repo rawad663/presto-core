@@ -10,7 +10,7 @@ class User(AbstractUser):
 class Resto(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     created = models.DateTimeField(auto_now_add=True)
-    resto_name = models.CharField(max_length=100, default='') # remove blank
+    resto_name = models.CharField(max_length=100, default='')
     description = models.TextField(default='')
     phone_number = models.CharField(max_length=20, default='')
     postal_code = models.CharField(max_length=10, default='')
