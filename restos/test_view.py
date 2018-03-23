@@ -176,9 +176,22 @@ class RestoListViewTest(APITestCase):
 
 class RestoLikeDislikeTest(APITestCase):
 
+<<<<<<< HEAD
+class ReservationViewTest(APITestCase):
+    def tearDown(self):
+        User.objects.all().delete()
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
+    
+    def test_reservation_customer_view(self):
+    def test_accept_reservation_resto_view(self):
+    def test_cancel_reservation_customer_view(self):
+    def test_decline_reservation_resto_view(self):
+=======
     def tearDown(self):
         User.objects.all().delete()
         Resto.objects.all().delete()  
+>>>>>>> origin/master
 
     def setUp(self):
         response = self.client.post(reverse('register_resto'), 
@@ -196,6 +209,13 @@ class RestoLikeDislikeTest(APITestCase):
         format='json'
         )
 
+<<<<<<< HEAD
+class EditCustomerViewTest(APITestCase):
+    def tearDown(self):
+        User.objects.all().delete()
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
+=======
         response_bis = self.client.post(reverse('register_resto'), 
         data= {
             "resto_name": "Bob's pizza",
@@ -211,14 +231,26 @@ class RestoLikeDislikeTest(APITestCase):
         format='json'
         )
         
+>>>>>>> origin/master
 
+    def test_edit_first_name_customer_view(self):
+    def test_edit_last_name_customer_view(self):
+    def test_edit_image_customer_view(self):
+ 
 
-
+class LoginViewTest(APITestCase):
+    def tearDown(self):
+        User.objects.all().delete()
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
+    
+    def test_login_customer_view(self):
+    def test_login_resto_view(self):
 
 
 '''test for Login, should work for both customer and resto
     need to have login implemented first
-class LoginViewTests(TestCase):
+class LoginViewTests(APITestCase):
     def setUp(self):
         self.credentials = {
             'username': 'testcustomer',
