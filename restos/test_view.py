@@ -174,9 +174,43 @@ class RestoListViewTest(APITestCase):
         self.assertEqual(len(response.data), 2) 
 
 
+class RestoLikeDislikeTest(APITestCase):
 
+    def tearDown(self):
+        User.objects.all().delete()
+        Resto.objects.all().delete()  
 
+    def setUp(self):
+        response = self.client.post(reverse('register_resto'), 
+        data= {
+            "resto_name": "Alice's dinner",
+            "description": "great food",
+            "phone_number": "12345678",
+            "postal_code": "H1H2H3",
+            "user": {
+            "username": "User1",
+            "email": "user1@foo.com",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "password":"pass"}},
+        format='json'
+        )
 
+        response_bis = self.client.post(reverse('register_resto'), 
+        data= {
+            "resto_name": "Bob's pizza",
+            "description": "pizza&pasta",
+            "phone_number": "12345678",
+            "postal_code": "H1H2H3",
+            "user": {
+            "username": "User2",
+            "email": "user2@foo.com",
+            "first_name": "Bob",
+            "last_name": "Frank",
+            "password":"pass"}},
+        format='json'
+        )
+        
 
 
 
