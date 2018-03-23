@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from restos.models import Resto, User, Customer, Reservation
 from rest_framework import permissions, status, generics
-from restos.serializers import RestoSerializer, CustomerSerializer, ReservationSerializer, CustomerSimpleSerializer, UserSerializer
+from restos.serializers import RestoSerializer, CustomerSerializer, ReservationSerializer, UserSerializer, CustomerSimpleSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -77,16 +77,16 @@ class CustomerDetail(APIView):
 
     def get(self, request, pk, format=None):
         customer = get_object_or_404(Customer, pk=pk)
-        serializer = CustomerSerializer(customer)
+        serializer = CustomerSimpleSerializer(customer)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         customer = get_object_or_404(Customer, pk=pk)
-        serializer = CustomerSerializer(resto, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        customer.user.first_name = request.data['first_name']
+
+        serializer = CustomerSimpleSerializer(customer)
+        return Response(serializer.data)
 
     # def delete(self, request, pk, format=None):
     #     customer = self.get_object(pk)

@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = User(
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
@@ -15,6 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         return user
+
 
     class Meta:
         model = User
@@ -28,19 +29,24 @@ class RestoSerializer(serializers.ModelSerializer):
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
         user.is_resto = True
 
-        resto =  Resto.objects.create(
-            resto_name=validated_data['resto_name'],
-            description=validated_data['description'],
-            phone_number=validated_data['phone_number'],
-            postal_code=validated_data['postal_code'],
-            address=validated_data['address'],
+        resto_name=validated_data['resto_name']
+        description=validated_data['description']
+        phone_number=validated_data['phone_number']
+        postal_code=validated_data['postal_code']
+        address=validated_data['address']
+
+        user.save()
+        resto = Resto(
+            resto_name=resto_name,
+            description=description,
+            phone_number=phone_number,
+            postal_code=postal_code,
+            address=address,
             user=user
         )
-        user.save()
         resto.save()
         return resto
 
-    #def update()
 
     class Meta:
         model = Resto
@@ -62,9 +68,13 @@ class CustomerSimpleSerializer(serializers.ModelSerializer):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
         user.is_resto = False
-        user.save()
 
-        return Customer.objects.create(user=user)
+        user.save()
+        customer = Customer(
+            user=user
+        )
+        customer.save()
+        return customer
 
     class Meta:
         model = Customer
