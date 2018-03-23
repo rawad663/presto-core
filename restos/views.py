@@ -164,6 +164,11 @@ class RegisterResto(generics.CreateAPIView):
         serializer = RestoSerializer(data=request.data)
         # Creating new User
         if serializer.is_valid():
+            resto.photo = request.FILES['photo']
+            file_type = resto.photo.url.split('.')[-1]
+            file_type = file_type.lower()
+            if file_type not in IMAGE_FILE_TYPES:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             Token.objects.create(user=serializer.save().user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
