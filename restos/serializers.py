@@ -57,6 +57,17 @@ class RestoSerializer(serializers.ModelSerializer):
         resto.save()
         return resto
 
+    def update(self, instance, validated_data):
+        # instance.user = validated_data.pop('user')
+        instance.resto_name = validated_data.get('resto_name', instance.resto_name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.postal_code = validated_data.get('postal_code', instance.postal_code)
+        instance.address = validated_data.get('address', instance.address)
+        instance.photo = validated_data.get('photo', instance.photo)
+        instance.save()
+        return instance
+
     class Meta:
         model = Resto
         fields = ('user', 'resto_name', 'description', 'phone_number', 'postal_code', 'address', 'photo')

@@ -56,9 +56,9 @@ class RestoDetail(APIView):
         serializer = RestoSerializer(resto)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         resto = self.get_object(pk)
-        serializer = RestoSerializer(resto, data=request.data)
+        serializer = RestoSerializer(resto, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -161,8 +161,7 @@ class RegisterResto(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-        
+
         # # Generating token for user
         # token = Token.objects.create(user=user)
         #
