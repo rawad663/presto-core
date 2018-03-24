@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework.test import APITestCase
 from django.core.urlresolvers import reverse
-
+from .image_base64 import base_64_text
 from .views import *
 from .models import *
 
@@ -106,6 +106,8 @@ class RegistrationViewTests(APITestCase):
             "description": "great food",
             "phone_number": "12345678",
             "postal_code": "H1H2H3",
+            "photo": base_64_text.get_base64(),
+            "address": '555 Pizza Ave',
             "user": {
             "username": "User1",
             "email": "user1@foo.com",
@@ -144,6 +146,8 @@ class RestoListViewTest(APITestCase):
             "description": "great food",
             "phone_number": "12345678",
             "postal_code": "H1H2H3",
+            "photo": base_64_text.get_base64(),
+            "address": '555 Pizza Ave',
             "user": {
             "username": "User1",
             "email": "user1@foo.com",
@@ -159,6 +163,8 @@ class RestoListViewTest(APITestCase):
             "description": "pizza&pasta",
             "phone_number": "12345678",
             "postal_code": "H1H2H3",
+            "photo": base_64_text.get_base64(),
+            "address": '555 Pizza Ave',
             "user": {
             "username": "User2",
             "email": "user2@foo.com",
@@ -171,14 +177,7 @@ class RestoListViewTest(APITestCase):
         url = reverse('resto_list')
         response = self.client.get(url, format='json')
 
-        self.assertEqual(len(response.data), 2) 
-
-
-
-
-
-
-
+        self.assertEqual(len(response.data), 2)
 
 
 

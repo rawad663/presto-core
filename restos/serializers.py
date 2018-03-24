@@ -1,12 +1,17 @@
 from restos.models import Resto, User, Reservation, Customer
 from rest_framework import serializers
-#from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
+from drf_extra_fields.fields import Base64ImageField
+import image
+
+
+# from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = User(
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
@@ -14,36 +19,48 @@ class UserSerializer(serializers.ModelSerializer):
             is_resto=False
         )
         user.set_password(validated_data['password'])
-        user.save()
         return user
 
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'email', 'username', 'password', 'is_resto')
 
+
 class RestoSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
-    
+    photo = Base64ImageField()  # Image file from base64 here
+
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
         user.is_resto = True
+
+        resto_name = validated_data['resto_name']
+        description = validated_data['description']
+        phone_number = validated_data['phone_number']
+        postal_code = validated_data['postal_code']
+        address = validated_data['address']
         user.save()
 
-        return Resto.objects.create(
-            resto_name=validated_data['resto_name'],
-            description=validated_data['description'],
-            phone_number=validated_data['phone_number'],
-            postal_code=validated_data['postal_code'],
-            photo=validated_data['photo'],
-            user=user
-        )
+        # Decode the photo data here
+        photo = validated_data.pop('photo')
 
-    #def update()
+        resto = Resto(
+            resto_name=resto_name,
+            description=description,
+            phone_number=phone_number,
+            postal_code=postal_code,
+            address=address,
+            user=user,
+            photo=photo
+        )
+        resto.save()
+        return resto
 
     class Meta:
         model = Resto
-        fields = ('user', 'resto_name', 'description', 'phone_number', 'postal_code', 'photo')
+        fields = ('user', 'resto_name', 'description', 'phone_number', 'postal_code', 'address', 'photo')
+
 
 class CustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
@@ -54,6 +71,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ('user', 'liked_restos', 'disliked_restos')
 
+
 class CustomerSimpleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
 
@@ -61,27 +79,33 @@ class CustomerSimpleSerializer(serializers.ModelSerializer):
         user_data = validated_data.pop('user')
         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
         user.is_resto = False
-        user.save()
 
-        return Customer.objects.create(user=user)
+        user.save()
+        customer = Customer(
+            user=user
+        )
+        customer.save()
+        return customer
 
     class Meta:
         model = Customer
         fields = ('user',)
 
+
 class ReservationSerializer(serializers.ModelSerializer):
     customer = CustomerSimpleSerializer(required=True)
     resto = RestoSerializer(required=True)
-    
+
     def create(self, validated_data, customer, resto):
         return Reservation.objects.create(
             customer=customer,
             resto=resto,
-            datetime=validated_data["datetime"]
+            datetime=validated_data["datetime"],
+            status='p'
         )
 
-    #def update()
+    # def update()
 
     class Meta:
         model = Reservation
-        fields = ('customer', 'resto', 'datetime')
+        fields = ('customer', 'resto', 'datetime', 'status')

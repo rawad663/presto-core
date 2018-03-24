@@ -18,8 +18,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -102,6 +100,17 @@ else:
 #          'PORT': '5432',
 #      }
 # }
+# If running on heroku
+# '''DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#          'NAME': 'dq2ualop41h4e',
+#          'USER': 'phjtvicgngzvmj',
+#          'PASSWORD': 'c4cf7232fc629ce6454c598a8030d54d30df68f3f922328eacef8b47227b090b',
+#          'HOST': 'ec2-107-20-249-48.compute-1.amazonaws.com',
+#          'PORT': '5432',
+#      }
+# }'''
 
 #if running locally
 DATABASES = {
@@ -151,3 +160,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1024000
