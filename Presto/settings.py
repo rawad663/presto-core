@@ -101,7 +101,8 @@ else:
 #      }
 # }
 # If running on heroku
-# '''DATABASES = {
+
+# DATABASES = {
 #      'default': {
 #          'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #          'NAME': 'dq2ualop41h4e',
@@ -110,7 +111,7 @@ else:
 #          'HOST': 'ec2-107-20-249-48.compute-1.amazonaws.com',
 #          'PORT': '5432',
 #      }
-# }'''
+# }
 
 #if running locally
 DATABASES = {
