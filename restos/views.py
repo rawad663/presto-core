@@ -204,7 +204,7 @@ class MakeReservation(APIView):
         else:
             return Response({"Message": "Resto ID belongs to that of a customer"}, status=status.HTTP_400_BAD_REQUEST)
 
-        reservation = ReservationSerializer(request.data, customer, resto)
+        reservation = ReservationSerializer.create(ReservationSerializer(), request.data, customer, resto)
         reservation.save()
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
