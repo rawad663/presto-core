@@ -59,7 +59,8 @@ class RestoSerializer(serializers.ModelSerializer):
         user_data = validated_data.get('user')
         if user_data:
             instance.user.first_name = user_data.get('first_name', instance.user.first_name)
-            instance.user.last_name = user_data.get('last_name', instance.user.last_name)        instance.resto_name = validated_data.get('resto_name', instance.resto_name)
+            instance.user.last_name = user_data.get('last_name', instance.user.last_name)
+        instance.resto_name = validated_data.get('resto_name', instance.resto_name)
         instance.description = validated_data.get('description', instance.description)
         instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         instance.postal_code = validated_data.get('postal_code', instance.postal_code)
@@ -103,7 +104,7 @@ class CustomerSimpleSerializer(serializers.ModelSerializer):
         user_data = validated_data.get('user')
         if user_data:
             instance.user.first_name = user_data.get('first_name', instance.user.first_name)
-            instance.user.last_name = user_data.get('last_name', instance.user.last_name)        instance.resto_name = validated_data.get('resto_name', instance.resto_name)
+            instance.user.last_name = user_data.get('last_name', instance.user.last_name)
         
         instance.save()
         return instance
