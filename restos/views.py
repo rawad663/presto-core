@@ -78,12 +78,12 @@ class CustomerDetail(APIView):
 
     def get(self, request, pk, format=None):
         customer = get_object_or_404(Customer, pk=pk)
-        serializer = CustomerSimpleSerializer(customer)
+        serializer = CustomerSerializer(customer)
         return Response(serializer.data)
 
     def patch(self, request, pk, format=None):
         customer = get_object_or_404(Customer, pk=pk)
-        serializer = CustomerSimpleSerializer(customer, data=request.data, partial=True)
+        serializer = CustomerSerializer(customer, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -195,6 +195,8 @@ class LikeResto(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class DislikeResto(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def post(self, request, pk):
         # get the disliked resto (if it isnt a 404 error)?
         user_resto = get_object_or_404(User, pk = pk)
@@ -220,6 +222,8 @@ class DislikeResto(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class MakeReservation(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def post(self, request, customerPk, restoPk):
         user_customer = get_object_or_404(User, pk=customerPk)
         user_resto = get_object_or_404(User, pk=restoPk)
@@ -242,6 +246,8 @@ class MakeReservation(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ReserveDetail(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def get(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk)
         serializer = CustomerSerializer(resto)
@@ -259,6 +265,8 @@ class ReserveDetail(APIView):
 
 
 class Reservations(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def get(self, request):
         user = request.user
         if user.is_resto:
@@ -269,6 +277,8 @@ class Reservations(APIView):
         return Response(serializer.data)
 
 class AcceptReservation(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def patch(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk)
         user = request.user
