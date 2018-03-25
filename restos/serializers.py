@@ -1,8 +1,6 @@
 from restos.models import Resto, User, Reservation, Customer
 from rest_framework import serializers
-from django.core.files.base import ContentFile
 from drf_extra_fields.fields import Base64ImageField
-import image
 
 
 # from django.contrib.auth.models import User
@@ -28,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RestoSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
-    photo = Base64ImageField()  # Image file from base64 here
+    photo = Base64ImageField(required=True)  # Image file from base64 here
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
@@ -58,13 +56,16 @@ class RestoSerializer(serializers.ModelSerializer):
         return resto
 
     def update(self, instance, validated_data):
-        # instance.user = validated_data.pop('user')
-        instance.resto_name = validated_data.get('resto_name', instance.resto_name)
+        user_data = validated_data.get('user')
+        if user_data:
+            instance.user.first_name = user_data.get('first_name', instance.user.first_name)
+            instance.user.last_name = user_data.get('last_name', instance.user.last_name)        instance.resto_name = validated_data.get('resto_name', instance.resto_name)
         instance.description = validated_data.get('description', instance.description)
         instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         instance.postal_code = validated_data.get('postal_code', instance.postal_code)
         instance.address = validated_data.get('address', instance.address)
         instance.photo = validated_data.get('photo', instance.photo)
+        
         instance.save()
         return instance
 
@@ -98,6 +99,15 @@ class CustomerSimpleSerializer(serializers.ModelSerializer):
         customer.save()
         return customer
 
+    def update(self, instance, validated_data):
+        user_data = validated_data.get('user')
+        if user_data:
+            instance.user.first_name = user_data.get('first_name', instance.user.first_name)
+            instance.user.last_name = user_data.get('last_name', instance.user.last_name)        instance.resto_name = validated_data.get('resto_name', instance.resto_name)
+        
+        instance.save()
+        return instance
+
     class Meta:
         model = Customer
         fields = ('user',)
@@ -112,6 +122,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             customer=customer,
             resto=resto,
             datetime=validated_data["datetime"],
+            num_people=validated_data["num_people"],
             status='p'
         )
 
@@ -119,4 +130,4 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ('customer', 'resto', 'datetime', 'status')
+        fields = ('customer', 'resto', 'datetime', 'num_people', 'status')

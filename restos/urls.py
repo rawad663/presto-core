@@ -3,14 +3,12 @@
 # from django.conf.urls.static import static
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.conf import settings
-from django.conf.urls.static import static
-from django.conf.urls import url
 from . import views
 
 urlpatterns = [
     url(r'^restos/$', views.RestoList.as_view(), name='resto_list'),
     url(r'^restos/([0-9]+)/$', views.RestoDetail.as_view(), name='resto_detail'),
+    url(r'^customers/$', views.CustomerList.as_view()),
     url(r'^customers/([0-9]+)/$', views.CustomerDetail.as_view(), name='customer_detail'),
     url('login-main/', views.CustomObtainAuthToken.as_view(), name='login'),
     url('register/customer/', views.RegisterCustomer.as_view(), name='register_customer'),
@@ -22,7 +20,3 @@ urlpatterns = [
     url('reservations/([0-9]+)/', views.ReserveDetail.as_view(), name='reservation_detail'),
     url('reservations/([0-9]+)/accept/', views.AcceptReservation.as_view(), name='accept_reservation'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

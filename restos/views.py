@@ -28,6 +28,13 @@ class RestoList(APIView):
         serializer = RestoSerializer(restos, many=True)
         return Response(serializer.data)
 
+class CustomerList(APIView):
+    #permissions
+
+    def get(self, request):
+        customers = Customer.objects.all()
+        serializer = CustomerSerializer(customers, many=True)
+        return Response(serializer.data)
 
 class CustomObtainAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
@@ -45,19 +52,13 @@ class RestoDetail(APIView):
     """
     #permission_classes = (IsOwnerOrReadOnly,)
 
-    def get_object(self, pk):
-        try:
-            return Resto.objects.get(pk=pk)
-        except Resto.DoesNotExist:
-            raise Http404
-
     def get(self, request, pk, format=None):
-        resto = self.get_object(pk)
+        resto = get_object_or_404(Resto, pk=pk)
         serializer = RestoSerializer(resto)
         return Response(serializer.data)
 
     def patch(self, request, pk, format=None):
-        resto = self.get_object(pk)
+        resto = get_object_or_404(Resto, pk=pk)
         serializer = RestoSerializer(resto, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -80,13 +81,14 @@ class CustomerDetail(APIView):
         serializer = CustomerSimpleSerializer(customer)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         customer = get_object_or_404(Customer, pk=pk)
+        serializer = CustomerSimpleSerializer(customer, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        customer.user.first_name = request.data['first_name']
-
-        serializer = CustomerSimpleSerializer(customer)
-        return Response(serializer.data)
 
     # def delete(self, request, pk, format=None):
     #     customer = self.get_object(pk)
@@ -265,7 +267,7 @@ class Reservations(APIView):
         return Response(serializer.data)
 
 class AcceptReservation(APIView):
-    def put(self, request, pk):
+    def patch(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk)
         user = request.user
         if user != reservation.resto.user:

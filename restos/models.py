@@ -16,7 +16,10 @@ class Resto(models.Model):
     phone_number = models.CharField(max_length=20, default='')
     postal_code = models.CharField(max_length=10, default='')
     address = models.CharField(max_length=30, default='')
-    photo = models.FileField(default=None)
+    photo = models.FileField(default=None, upload_to='resto_images')
+
+    def __str__(self):
+        return '%s' % (self.user.username)
 
     class Meta:
         ordering = ('created',)
@@ -27,11 +30,14 @@ class Customer(models.Model):
     liked_restos = models.ManyToManyField(Resto, blank=True, related_name='liked_restos')
     disliked_restos = models.ManyToManyField(Resto, blank=True, related_name='disliked_restos')
 
+    def __str__(self):
+        return '%s' % (self.user.username)
 
 class Reservation(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     resto = models.ForeignKey(Resto, on_delete=models.CASCADE)
     datetime = models.DateTimeField(auto_now=False, auto_now_add=False, blank=False)
+    num_people = models.IntegerField(default=1)
 
     STATUSCHOICE = (
         ('a', 'Accepted'),
@@ -39,3 +45,6 @@ class Reservation(models.Model):
         ('p', 'Pending'),
     )
     status = models.CharField(max_length=1, choices=STATUSCHOICE, default='p')
+
+    def __str__(self):
+        return '%s at %s' % (self.customer.user.username, self.resto.resto_name)
