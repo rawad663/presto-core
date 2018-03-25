@@ -170,6 +170,8 @@ class RegisterResto(generics.CreateAPIView):
         # return Response({'detail': 'User has been created successfully', 'Token': token.key})
 
 class LikeResto(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def post(self, request, pk):
         user_resto = get_object_or_404(User, pk=pk)
         resto = None
