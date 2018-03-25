@@ -41,7 +41,7 @@ class RestoSerializer(serializers.ModelSerializer):
         user.save()
 
         # Decode the photo data here
-        photo = validated_data.pop('photo')
+        photo = validated_data.get('photo')
 
         resto = Resto(
             resto_name=resto_name,
