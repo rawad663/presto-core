@@ -79,7 +79,7 @@ REST_FRAMEWORK = {
       'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'myapp.permissions.AllowOptionsAuthentication',
+        'restos.permissions.AllowOptionsAuthentication',
     )
 }
 
