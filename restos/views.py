@@ -95,42 +95,6 @@ class CustomerDetail(APIView):
     #     customer.delete()
     #     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-""" 
-This is the user detail page.
-Users browse other users but user can only edit their own page.
-There are permissions and cRUD actions available.
-"""
-
-
-'''class UserDetail(APIView):
-    #permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsSelfOrReadOnly)
-
-    def get_object(self, pk):
-        try:
-            return User.objects.get(pk=pk)
-        except Resto.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        user = self.get_object(pk)
-        serializer = UserFullSerializer(user)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        user = self.get_object(pk)
-        serializer = UserSerializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        user = self.get_object(pk)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)'''
-
-
 class RegisterCustomer(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = CustomerSimpleSerializer
@@ -139,8 +103,8 @@ class RegisterCustomer(generics.CreateAPIView):
         serializer = CustomerSimpleSerializer(data=request.data)
         # Creating new User
         if serializer.is_valid():
-            Token.objects.create(user=serializer.save().user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            token = Token.objects.create(user=serializer.save().user)
+            return Response({"token": token, "customer": serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -159,8 +123,8 @@ class RegisterResto(generics.CreateAPIView):
         serializer = RestoSerializer(data=request.data)
         # Creating new User
         if serializer.is_valid():
-            Token.objects.create(user=serializer.save().user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            token = Token.objects.create(user=serializer.save().user)
+            return Response({"token": token, "resto": serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
