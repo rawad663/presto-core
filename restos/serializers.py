@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RestoSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
-    photo = Base64ImageField(required=True)  # Image file from base64 here
+    photo = Base64ImageField(required=False)  # Image file from base64 here
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
