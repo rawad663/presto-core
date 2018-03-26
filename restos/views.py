@@ -41,8 +41,14 @@ class CustomObtainAuthToken(ObtainAuthToken):
         response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
         user = User.objects.get(pk=token.user_id)
-        serializer = UserSerializer(user)
-        return Response({'token': token.key, 'user': serializer.data})
+        if user.is_resto:
+            resto = Resto.objects.get(pk=token.user_id)
+            serializer = RestoSerializer(resto)
+            return Response({'token': token.key, 'resto': serializer.data})
+        else:
+            customer = Customer.objects.get(pk=token.user_id)
+            serializer = CustomerSimpleSerializer(customer)
+            return Response({'token': token.key, 'customer': serializer.data})
 
 
 # This is the detail page
