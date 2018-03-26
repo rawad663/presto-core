@@ -314,6 +314,34 @@ class MakeReservationTest(APITestCase):
         self.assertEqual(1, Reservation.objects.all().count())
 
 
+class CustomerProfileTest(APITestCase):
+    
+    def tearDown(self):
+        User.objects.all().delete()
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
+
+    def test_viewprofile(self):
+        url= reverse('register_customer')
+        form_data= {
+        "user": {
+        "username": "User2",
+        "email": "user2@foo.com",
+        "first_name": "Bob",
+        "last_name": "Frank",
+        "password": "pass"
+            }
+        }
+        response = self.client.post(url, data=form_data, format='json')
+        user = User.objects.get(pk=1)
+        cust = Customer.objects.get(pk=1)
+        factory = APIRequestFactory()
+        view = CustomerDetail.as_view()
+        request = factory.get('/customers/', content_type='application/json')
+        force_authenticate(request, user=user)
+        response = view(request, pk= cust.user.id)
+        self.assertEqual("User2", cust.user.username)
+
 '''
 class ReservationViewTest(APITestCase):
     def tearDown(self):
