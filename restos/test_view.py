@@ -131,7 +131,6 @@ class RegistrationViewTests(APITestCase):
         self.assertEqual(Resto.objects.all().count(), 1)
 
 
-
 class RestoListViewTest(APITestCase):
 
     def tearDown(self):
@@ -257,6 +256,64 @@ class RestoLikeDislikeTest(APITestCase):
         self.assertEqual(1, len(cust.disliked_restos.all()))
 
 
+class MakeReservationTest(APITestCase):
+
+    def tearDown(self):
+        User.objects.all().delete()
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
+
+    def test_make_reservation(self):
+        response_resto = self.client.post(reverse('register_resto'),
+        data= {
+        "resto_name": "Alice's dinner",
+        "description": "great food",
+        "phone_number": "12345678",
+        "postal_code": "H1H2H3",
+        "address":"123 rue du fort",
+        "user": {
+        "username": "User1",
+        "email": "user1@foo.com",
+        "first_name": "Alice",
+        "last_name": "Smith",
+        "password":"pass"}},
+        format='json'
+        )
+
+
+        url= reverse('register_customer')
+        form_data= {
+        "user": {
+        "username": "User4",
+        "email": "user4@foo.com",
+        "first_name": "Bob",
+        "last_name": "Frank",
+        "password": "pass"
+        }
+        }
+        response_cust = self.client.post(url, data=form_data, format='json')
+
+    
+        user = User.objects.get(pk=2)
+        cust = Customer.objects.get(pk=2)
+        resto = Resto.objects.get(pk=1)
+        factory = APIRequestFactory()
+        view = MakeReservation.as_view()
+        view_bis = Reservations.as_view()
+        request = factory.post('/reserve/', data={
+        "customer": "user4",
+        "resto": "Alice's dinner",
+        "datetime": "2018-03-27 19:30", 
+        "num_people": "3",
+        "status":"p"}, format='json')
+        request_bis = factory.get('/reservations/', content_type='application/json')
+        force_authenticate(request, user=user)
+        force_authenticate(request_bis, user=user)
+        response = view(request, customerPk=cust.user.id, restoPk=resto.user.id)
+        response_bis = view_bis(request_bis)
+        self.assertEqual(1, Reservation.objects.all().count())
+
+
 '''
 class ReservationViewTest(APITestCase):
     def tearDown(self):
@@ -271,7 +328,7 @@ class ReservationViewTest(APITestCase):
     def test_cancel_reservation_customer_view(self):
 
     def test_decline_reservation_resto_view(self):
->>>>>>> 17587867a0812ebe98b957e4176ef627df23bc50
+
 
 
 
