@@ -259,7 +259,16 @@ class AcceptReservation(APIView):
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
-
+class DeclineReservation(APIVIew):
+    def put(self, request, pk):
+        reservation = get_object_or_404(Reservation, pk=pk)
+        user = request.user
+        if user != reservation.resto.user:
+            return Response({"Message": "Resto cannot decline a reservation that is not attributed to it"}, status=status.HTTP_400_BAD_REQUEST)
+        reservation.status = 'd'
+        reservation.save()
+        serializer = ReservationSerializer(reservation)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 ''' class ChangePassword(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
