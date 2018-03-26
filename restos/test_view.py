@@ -2,7 +2,13 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework.test import APITestCase
 from django.core.urlresolvers import reverse
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
 from .image_base64 import base_64_text
+import json
+from rest_framework.test import APIRequestFactory
+from rest_framework.test import force_authenticate
+
 from .views import *
 from .models import *
 
@@ -182,29 +188,74 @@ class RestoListViewTest(APITestCase):
         self.assertEqual(len(response.data), 2)
 
 
-
 class RestoLikeDislikeTest(APITestCase):
-    
     def tearDown(self):
         User.objects.all().delete()
-        Resto.objects.all().delete()  
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
 
-    def setUp(self):
-        response = self.client.post(reverse('register_resto'), 
+    def test_likeresto(self):
+        response_resto = self.client.post(reverse('register_resto'),
         data= {
-            "resto_name": "Alice's dinner",
-            "description": "great food",
-            "phone_number": "12345678",
-            "postal_code": "H1H2H3",
-            "address":"123 rue du fort",
-            "user": {
-            "username": "User1",
-            "email": "user1@foo.com",
-            "first_name": "Alice",
-            "last_name": "Smith",
-            "password":"pass"}},
+        "resto_name": "Alice's dinner",
+        "description": "great food",
+        "phone_number": "12345678",
+        "postal_code": "H1H2H3",
+        "address":"123 rue du fort",
+        "user": {
+        "username": "User1",
+        "email": "user1@foo.com",
+        "first_name": "Alice",
+        "last_name": "Smith",
+        "password":"pass"}},
         format='json'
         )
+
+        response_restobis = self.client.post(reverse('register_resto'),
+        data= {
+        "resto_name": "Bob's pizza",
+        "description": "pizza&pasta",
+        "phone_number": "12345678",
+        "postal_code": "H1H2H3",
+        "address":"456 rue du fort",
+        "user": {
+        "username": "User2",
+        "email": "user2@foo.com",
+        "first_name": "Bob",
+        "last_name": "Frank",
+        "password":"pass"}},
+        format='json'
+        )
+
+        url= reverse('register_customer')
+        form_data= {
+        "user": {
+        "username": "User4",
+        "email": "user4@foo.com",
+        "first_name": "Bob",
+        "last_name": "Frank",
+        "password": "pass"
+        }
+        }
+        response_cust = self.client.post(url, data=form_data, format='json')
+
+
+        user = User.objects.get(pk=3)
+        cust = Customer.objects.get(pk=3)
+        resto = Resto.objects.get(pk=1)
+        resto_bis = Resto.objects.get(pk=2)
+        factory = APIRequestFactory()
+        view = LikeResto.as_view()
+        view_dis = DislikeResto.as_view()
+        request = factory.post('/like-resto/', json.dumps({}), content_type='application/json')
+        request_dis = factory.post('/dislike-resto/', json.dumps({}), content_type='application/json')
+        force_authenticate(request, user=user)
+        force_authenticate(request_dis, user=user)
+        response = view(request, pk= resto.user.id)
+        response_bis = view_dis(request_dis, pk = resto_bis.user.id)
+        self.assertEqual(1, len(cust.liked_restos.all()))
+        self.assertEqual(1, len(cust.disliked_restos.all()))
+
 
 '''
 class ReservationViewTest(APITestCase):
