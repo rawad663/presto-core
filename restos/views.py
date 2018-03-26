@@ -74,7 +74,7 @@ class CustomerDetail(APIView):
     """
     Retrieve, update or delete a resto instance.
     """
-    permission_classes = (IsOwnerOrReadOnly,)
+    #permission_classes = (IsOwnerOrReadOnly,)
 
     def get(self, request, pk, format=None):
         customer = get_object_or_404(Customer, pk=pk)
