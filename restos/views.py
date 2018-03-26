@@ -104,7 +104,7 @@ class RegisterCustomer(generics.CreateAPIView):
         # Creating new User
         if serializer.is_valid():
             token = Token.objects.create(user=serializer.save().user)
-            return Response({"token": token, "customer": serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({"token": token.key, "customer": serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -124,7 +124,7 @@ class RegisterResto(generics.CreateAPIView):
         # Creating new User
         if serializer.is_valid():
             token = Token.objects.create(user=serializer.save().user)
-            return Response({"token": token, "resto": serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({"token": token.key, "resto": serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
