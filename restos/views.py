@@ -78,7 +78,7 @@ class RestoDetail(APIView):
 
 class CustomerDetail(APIView):
     """
-    Retrieve, update or delete a resto instance.
+    Retrieve, update or delete a customer instance.
     """
     #permission_classes = (IsOwnerOrReadOnly,)
 
@@ -259,7 +259,7 @@ class AcceptReservation(APIView):
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
-class DeclineReservation(APIVIew):
+class DeclineReservation(APIView):
     def put(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk)
         user = request.user

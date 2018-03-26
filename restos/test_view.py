@@ -342,6 +342,46 @@ class CustomerProfileTest(APITestCase):
         response = view(request, pk= cust.user.id)
         self.assertEqual("User2", cust.user.username)
 
+
+class RestoEditTest(APITestCase):
+
+    def tearDown(self):    
+        User.objects.all().delete()
+        Resto.objects.all().delete()
+        Customer.objects.all().delete()
+
+    def test_editprofile(self):
+        request = self.client.post(reverse('register_resto'), 
+        data= {
+            "resto_name": "Alice's dinner",
+            "description": "great food",
+            "phone_number": "12345678",
+            "postal_code": "H1H2H3",
+            "photo": base_64_text.get_base64(),
+            "address":"123 rue du fort",
+            "user": {
+            "username": "User1",
+            "email": "user1@foo.com",
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "password":"pass"}},
+        format='json'
+        )
+        user = User.objects.get(pk=1)
+        resto = Resto.objects.get(pk=1)
+        factory = APIRequestFactory()
+
+        self.assertEqual("Alice's dinner", resto.resto_name) 
+
+        request_bis = factory.patch('/customers/', data= {"resto_name":"Plaza"}, format='json') 
+        view = RestoDetail.as_view()
+        response = view(request_bis, pk=resto.user.id)
+        restobis = Resto.objects.get(pk=1)
+        print(response.data)
+        self.assertEqual("Plaza", restobis.resto_name) 
+
+
+
 '''
 class ReservationViewTest(APITestCase):
     def tearDown(self):
