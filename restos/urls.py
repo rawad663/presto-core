@@ -19,4 +19,5 @@ urlpatterns = [
     url('reservations/', views.Reservations.as_view(), name='reservation'),
     url('reservations/([0-9]+)/', views.ReserveDetail.as_view(), name='reservation_detail'),
     url('reservations/([0-9]+)/accept/', views.AcceptReservation.as_view(), name='accept_reservation'),
+    url('reservations/([0-9]+)/decline/', views.DeclineReservation.as_view()),
 ]
