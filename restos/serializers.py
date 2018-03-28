@@ -67,6 +67,7 @@ class RestoSerializer(serializers.ModelSerializer):
         instance.address = validated_data.get('address', instance.address)
         instance.photo = validated_data.get('photo', instance.photo)
         
+        instance.user.save()
         instance.save()
         return instance
 
@@ -86,6 +87,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             instance.user.first_name = user_data.get('first_name', instance.user.first_name)
             instance.user.last_name = user_data.get('last_name', instance.user.last_name)
         
+        instance.user.save()
         instance.save()
         return instance
 
@@ -108,15 +110,6 @@ class CustomerSimpleSerializer(serializers.ModelSerializer):
         )
         customer.save()
         return customer
-
-    def update(self, instance, validated_data):
-        user_data = validated_data.get('user')
-        if user_data:
-            instance.user.first_name = user_data.get('first_name', instance.user.first_name)
-            instance.user.last_name = user_data.get('last_name', instance.user.last_name)
-        
-        instance.save()
-        return instance
 
     class Meta:
         model = Customer
