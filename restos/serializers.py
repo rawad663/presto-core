@@ -57,9 +57,10 @@ class RestoSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         user_data = validated_data.get('user')
+        user = User.objects.get(pk=instance.user.id)
         if user_data:
-            instance.user.first_name = user_data.get('first_name', instance.user.first_name)
-            instance.user.last_name = user_data.get('last_name', instance.user.last_name)
+            user.first_name = user_data.get('first_name', instance.user.first_name)
+            user.last_name = user_data.get('last_name', instance.user.last_name)
         instance.resto_name = validated_data.get('resto_name', instance.resto_name)
         instance.description = validated_data.get('description', instance.description)
         instance.phone_number = validated_data.get('phone_number', instance.phone_number)
@@ -67,7 +68,8 @@ class RestoSerializer(serializers.ModelSerializer):
         instance.address = validated_data.get('address', instance.address)
         instance.photo = validated_data.get('photo', instance.photo)
         
-        instance.user.save()
+        user.save()
+        instance.user = user
         instance.save()
         return instance
 
