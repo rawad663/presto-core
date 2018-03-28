@@ -409,7 +409,7 @@ class RestoEditTest(APITestCase):
         resto = Resto.objects.get(pk=1)
         self.assertEqual(True, bool(resto.photo))
 
-'''   
+
 # S10T6
 class CustomerEditTest(APITestCase):
     def tearDown(self):    
@@ -439,7 +439,7 @@ class CustomerEditTest(APITestCase):
         response = view(request_bis, pk=customer.user.id)
         customer = Customer.objects.get(pk=1)
         self.assertEqual("Alice", customer.user.first_name) 
-'''
+
 
 # S14T6 
 class RestoProfileTest(APITestCase):
