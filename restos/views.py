@@ -9,7 +9,6 @@ from rest_framework.response import Response
 from restos.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
 from rest_framework import generics
 from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.views.generic import CreateView
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -213,7 +212,7 @@ class MakeReservation(APIView):
 class ReserveDetail(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, pk):
+    def get(self, request, pk:
         reservation = get_object_or_404(Reservation, pk=pk)
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data)
