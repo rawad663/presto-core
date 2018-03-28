@@ -16,8 +16,8 @@ urlpatterns = [
     url('like-resto/([0-9]+)/', views.LikeResto.as_view(), name='like_resto'),
     url('dislike-resto/([0-9]+)/', views.DislikeResto.as_view(),name='dislike_resto'),
     url('reserve/([0-9]+)/([0-9]+)/', views.MakeReservation.as_view(), name='reserve'),
-    url(r'^reservations/', views.Reservations.as_view(), name='reservation'),
-    url(r'^reservations/([0-9]+)/', views.ReserveDetail.as_view(), name='reservation_detail'),
-    url(r'^reservations/([0-9]+)/accept/', views.AcceptReservation.as_view(), name='accept_reservation'),
-    url(r'^reservations/([0-9]+)/decline/', views.DeclineReservation.as_view()),
+    url(r'^reservations/$', views.Reservations.as_view(), name='reservation'),
+    url(r'^reservations/([0-9]+)/$', views.ReserveDetail.as_view(), name='reservation_detail'),
+    url(r'^reservations/([0-9]+)/accept/$', views.AcceptReservation.as_view(), name='accept_reservation'),
+    url(r'^reservations/([0-9]+)/decline/$', views.DeclineReservation.as_view()),
 ]
