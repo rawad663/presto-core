@@ -83,11 +83,16 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         user_data = validated_data.get('user')
-        if user_data:
-            instance.user.first_name = user_data.get('first_name', instance.user.first_name)
-            instance.user.last_name = user_data.get('last_name', instance.user.last_name)
+        # instance.user.first_name = user_data.get('first_name', instance.user.first_name)
+        # instance.user.last_name = user_data.get('last_name', instance.user.last_name)
+
+        user = User.objects.get(pk=instance.user.id)
+        user.first_name = user_data.get('first_name', instance.user.first_name)
+        user.last_name = user_data.get('last_name', instance.user.last_name)
+        user.save()
         
-        instance.user.save()
+        
+        instance.user = user
         instance.save()
         return instance
 
