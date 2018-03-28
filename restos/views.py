@@ -56,7 +56,7 @@ class RestoDetail(APIView):
     """
     Retrieve, update or delete a resto instance.
     """
-    #permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
 
     def get(self, request, pk, format=None):
         resto = get_object_or_404(Resto, pk=pk)
@@ -80,7 +80,7 @@ class CustomerDetail(APIView):
     """
     Retrieve, update or delete a customer instance.
     """
-    #permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
 
     def get(self, request, pk, format=None):
         customer = get_object_or_404(Customer, pk=pk)
@@ -249,7 +249,7 @@ class Reservations(APIView):
 class AcceptReservation(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def patch(self, request, pk):
+    def put(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk)
         user = request.user
         if user != reservation.resto.user:
