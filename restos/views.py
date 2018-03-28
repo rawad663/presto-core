@@ -215,7 +215,7 @@ class ReserveDetail(APIView):
 
     def get(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk)
-        serializer = CustomerSerializer(resto)
+        serializer = ReservationSerializer(reservation)
         return Response(serializer.data)
 
     def delete(self, request, pk):
@@ -255,6 +255,8 @@ class AcceptReservation(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK) 
 
 class DeclineReservation(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def put(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk)
         user = request.user

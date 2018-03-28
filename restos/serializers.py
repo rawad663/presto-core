@@ -140,4 +140,4 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ('customer', 'resto', 'datetime', 'num_people', 'status')
+        fields = ('id', 'customer', 'resto', 'datetime', 'num_people', 'status')
