@@ -151,9 +151,11 @@ class LikeResto(APIView):
         
         customer = user.customer
         customer.liked_restos.add(resto)
+        customer.liked_restos.save()
         # if liked resto was a disliked resto, remove that resto from disliked resto list
         if resto in customer.disliked_restos.all():
             customer.disliked_restos.remove(resto)
+            customer.disliked_restos.save()
         customer.save()
 
         serializer = CustomerSerializer(customer)
@@ -178,9 +180,11 @@ class DislikeResto(APIView):
         
         customer = user.customer
         customer.disliked_restos.add(resto)
+        customer.disliked_restos.save()
         # if disliked resto was a liked resto, remove that resto from liked resto list
         if resto in customer.liked_restos.all():
             customer.liked_restos.remove(resto)
+            customer.liked_restos.save()
         customer.save()
 
         serializer = CustomerSerializer(customer)
