@@ -212,7 +212,7 @@ class MakeReservation(APIView):
 class ReserveDetail(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, pk:
+    def get(self, request, pk):
         reservation = get_object_or_404(Reservation, pk=pk)
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data)
