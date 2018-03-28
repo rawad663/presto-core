@@ -514,7 +514,7 @@ class AcceptReservationTest(APITestCase):
         }
         response_cust = self.client.post(url, data=form_data, format='json')
 
-        user = User.objects.get(pk=2)
+        user = User.objects.get(pk=1)
         cust = Customer.objects.get(pk=2)
         resto = Resto.objects.get(pk=1)
         factory = APIRequestFactory()
@@ -535,52 +535,13 @@ class AcceptReservationTest(APITestCase):
         force_authenticate(request_bis, user=user)
         response = view(request, customerPk=cust.user.id, restoPk=resto.user.id)
         response_bis = view_bis(request_bis)
+        reservation = Reservation.objects.get(pk=1)
+        self.assertEqual('p', reservation.status)
         #by this point the reservation has been made, now the resto must accept it
-        request_cee = factory.patch('/reservations/accept/', data={"status": "a"}, format='json')
-        force_authenticate(request_cee, user=user)
-        response_cee = view_cee(request_cee, pk= resto.user.id)
+        class request(object):
+            def __init__(self,user):
+                self.user=user
+        request_cee = request(user)
+        AcceptReservation.put(AcceptReservation(), request_cee, 1)
         reservation = Reservation.objects.get(pk=1)
         self.assertEqual('a', reservation.status)
-
-
-'''
-class ReservationViewTest(APITestCase):
-    def tearDown(self):
-        User.objects.all().delete()
-        Resto.objects.all().delete()
-        Customer.objects.all().delete()
-
-    def test_accept_reservation_resto_view(self):
-
-    def test_reservation_customer_view(self):
-
-    def test_cancel_reservation_customer_view(self):
-
-    def test_decline_reservation_resto_view(self):
-
- 
-
-class LoginViewTest(APITestCase):
-    def tearDown(self):
-        User.objects.all().delete()
-        Resto.objects.all().delete()
-        Customer.objects.all().delete()
-    
-    def test_login_customer_view(self):
-    def test_login_resto_view(self):
-
-
-test for Login, should work for both customer and resto
-    need to have login implemented first
-class LoginViewTests(APITestCase):
-    def setUp(self):
-        self.credentials = {
-            'username': 'testcustomer',
-            'password': 'verysecurepassword'
-            }
-        User.objects.create_user(**self.credentials)
-
-    def test_login(self):
-        response = self.client.post('/login', self.credentials, follow=True)
-        self.assertTrue(response.context['user'].is_authenticated)
-'''
