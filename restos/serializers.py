@@ -81,8 +81,8 @@ class CustomerSerializer(serializers.ModelSerializer):
     disliked_restos = RestoSerializer(required=False, many=True)
 
     def update(self, instance, validated_data):
-            instance.user.first_name = validated_data.get('first_name', instance.user.first_name)
-            instance.user.last_name = validated_data.get('last_name', instance.user.last_name)
+        instance.user.first_name = validated_data.get('first_name', instance.user.first_name)
+        instance.user.last_name = validated_data.get('last_name', instance.user.last_name)
         
         instance.save()
         return instance
